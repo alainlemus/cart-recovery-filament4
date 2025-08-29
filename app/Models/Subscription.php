@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Testing\Fluent\Concerns\Has;
 
 class Subscription extends Model
 {
+    use HasFactory;
+
     protected $table = 'subscriptions'; // Explicitly set the table name
 
     protected $fillable = [
@@ -18,7 +22,9 @@ class Subscription extends Model
         'stripe_price',
         'quantity',
         'trial_ends_at',
+        'start_at',
         'ends_at',
+        'product_id',
     ];
 
     protected $casts = [
@@ -26,19 +32,19 @@ class Subscription extends Model
         'ends_at' => 'datetime',
     ];
 
-    /**
-     * Get the user that owns the subscription.
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the subscription items for the subscription.
-     */
-    public function subscriptionItems(): HasMany
+    public function product(): BelongsTo
     {
-        return $this->hasMany(SubscriptionItem::class);
+        return $this->belongsTo(Product::class);
     }
+
+    public function shops(): HasMany
+    {
+        return $this->hasMany(Shop::class);
+    }
+
 }
