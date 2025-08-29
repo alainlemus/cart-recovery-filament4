@@ -17,11 +17,13 @@ class Product extends Model
         'price',
         'currency',
         'is_active',
+        'features'
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'price' => 'decimal:2',
+        'features' => 'array',
     ];
 
     public function subscriptions()

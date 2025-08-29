@@ -19,6 +19,7 @@ class ProductSeeder extends Seeder
             'price' => 9.99,
             'currency' => 'USD',
             'is_active' => true,
+            'features' => ['Individual configuration', 'No setup, or hidden fees', 'Team size: 1 developer', 'Premium support: 6 months', 'Free updates: 6 months'],
         ]);
 
         Product::factory()->create([
@@ -27,6 +28,7 @@ class ProductSeeder extends Seeder
             'price' => 14.99,
             'currency' => 'USD',
             'is_active' => true,
+            'features' => ['Individual configuration', 'No setup, or hidden fees', 'Team size: 1 developer', 'Premium support: 6 months', 'Free updates: 6 months'],
         ]);
 
         Product::factory()->create([
@@ -35,6 +37,7 @@ class ProductSeeder extends Seeder
             'price' => 19.99,
             'currency' => 'USD',
             'is_active' => true,
+            'features' => ['Individual configuration', 'No setup, or hidden fees', 'Team size: 1 developer', 'Premium support: 6 months', 'Free updates: 6 months'],
         ]);
     }
 }

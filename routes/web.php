@@ -10,20 +10,19 @@ Route::get('/', function () {
     return view('landing');
 })->name('home');
 
+Route::get('/subscription/create', [SubscriptionController::class, 'create'])->name('subscription.create');
+Route::post('/subscription/checkout/{plan}', [SubscriptionController::class, 'checkout'])->name('subscription.checkout');
+Route::get('/subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success');
+
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
-
     Route::get('settings/profile', Profile::class)->name('settings.profile');
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
-
-    Route::get('/subscription/create', [SubscriptionController::class, 'create'])->name('subscription.create');
-    Route::post('/subscription/checkout/{plan}', [SubscriptionController::class, 'checkout'])->name('subscription.checkout');
-    Route::get('/subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success');
 });
 
 

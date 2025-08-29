@@ -17,6 +17,7 @@ class ProductFactory extends Factory
             'price' => $this->faker->randomFloat(2, 5, 100),
             'currency' => 'USD',
             'is_active' => $this->faker->boolean(80),
+            'features' => $this->faker->randomElements(['Feature A', 'Feature B', 'Feature C', 'Feature D'], 2),
         ];
     }
 }
