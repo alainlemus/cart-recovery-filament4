@@ -20,6 +20,7 @@ class ProductSeeder extends Seeder
             'currency' => 'USD',
             'is_active' => true,
             'features' => ['Individual configuration', 'No setup, or hidden fees', 'Team size: 1 developer', 'Premium support: 6 months', 'Free updates: 6 months'],
+            'stripe_product_id' => 'prod_SuE78AmwLg4Jnw',
         ]);
 
         Product::factory()->create([
@@ -29,6 +30,7 @@ class ProductSeeder extends Seeder
             'currency' => 'USD',
             'is_active' => true,
             'features' => ['Individual configuration', 'No setup, or hidden fees', 'Team size: 1 developer', 'Premium support: 6 months', 'Free updates: 6 months'],
+            'stripe_product_id' => 'prod_SyzHN2KL8MFVOj',
         ]);
 
         Product::factory()->create([
@@ -38,6 +40,7 @@ class ProductSeeder extends Seeder
             'currency' => 'USD',
             'is_active' => true,
             'features' => ['Individual configuration', 'No setup, or hidden fees', 'Team size: 1 developer', 'Premium support: 6 months', 'Free updates: 6 months'],
+            'stripe_product_id' => 'prod_SyzIsHpm6szBHI',
         ]);
     }
 }

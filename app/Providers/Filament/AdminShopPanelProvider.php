@@ -28,7 +28,7 @@ class AdminShopPanelProvider extends PanelProvider
             ->id('admin-shop')
             ->path('admin-shop')
             ->login()
-            ->registration()
+            //->registration()
             ->passwordReset()
             ->emailVerification()
             ->emailChangeVerification()

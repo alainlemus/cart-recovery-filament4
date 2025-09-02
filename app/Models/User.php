@@ -3,13 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Cashier\Billable;
+use Filament\Panel;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, Billable;
@@ -23,6 +26,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -58,5 +62,22 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        //dd($this->role, $panel->getId());
+        // Panel admin (solo super-admin)
+        if ($panel->getId() === 'admin') {
+            return $this->role === 'super-admin';
+        }
+
+        // Panel admin-shop (solo admin o user)
+        if ($panel->getId() === 'admin-shop') {
+            return in_array($this->role, ['admin', 'user']) && $this->subscriptions()->where('stripe_status', 'active')->exists();
+        }
+
+        // Otros paneles o default
+        return false;
     }
 }

@@ -18,6 +18,7 @@ class ProductFactory extends Factory
             'currency' => 'USD',
             'is_active' => $this->faker->boolean(80),
             'features' => $this->faker->randomElements(['Feature A', 'Feature B', 'Feature C', 'Feature D'], 2),
+            'stripe_product_id' => null,
         ];
     }
 }

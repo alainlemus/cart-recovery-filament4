@@ -22,7 +22,7 @@ class SubscriptionSeeder extends Seeder
             'quantity' => 1,
             'trial_ends_at' => null,
             'start_at' => now(),
-            'ends_at' => now()->addMonths(12),
+            'ends_at' => now()->addMonth(1),
         ]);
     }
 }
