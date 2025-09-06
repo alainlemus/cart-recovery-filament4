@@ -31,4 +31,9 @@ class Product extends Model
         return $this->hasMany(Subscription::class);
     }
 
+    public function shops()
+    {
+        return $this->hasMany(Shop::class);
+    }
+
 }

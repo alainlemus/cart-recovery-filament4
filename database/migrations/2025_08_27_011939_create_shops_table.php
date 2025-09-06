@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('shops', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('domain')->unique();
-            $table->string('access_token');
-            $table->string('shopify_domain');
+            $table->string('access_token')->nullable();
+            $table->string('shopify_domain')->unique();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('subscription_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('product_id')->nullable()->constrained()->onDelete('set null');

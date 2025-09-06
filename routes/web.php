@@ -5,6 +5,7 @@ use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\ShopifyAuthController;
 use App\Http\Middleware\CheckRole;
 
 Route::get('/', function () {
@@ -14,6 +15,10 @@ Route::get('/', function () {
 Route::get('/subscription/create/{plan}', [SubscriptionController::class, 'create'])->name('subscription.create');
 Route::post('/subscription/checkout/{plan}', [SubscriptionController::class, 'checkout'])->name('subscription.checkout');
 Route::get('/subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success');
+
+// shopify routes
+Route::get('/shopify/auth/{shop_id}', [ShopifyAuthController::class, 'auth'])->name('shopify.auth');
+Route::get('/shopify/callback', [ShopifyAuthController::class, 'callback'])->name('shopify.callback');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

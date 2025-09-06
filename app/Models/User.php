@@ -80,4 +80,9 @@ class User extends Authenticatable implements FilamentUser
         // Otros paneles o default
         return false;
     }
+
+    public function shops()
+    {
+        return $this->hasMany(Shop::class);
+    }
 }

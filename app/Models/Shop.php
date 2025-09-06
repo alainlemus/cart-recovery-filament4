@@ -13,7 +13,6 @@ class Shop extends Model
 
     protected $fillable = [
         'name',
-        'domain',
         'access_token',
         'shopify_domain',
         'user_id',
@@ -21,6 +20,7 @@ class Shop extends Model
         'product_id',
         'shopify_api_key',
         'shopify_api_secret',
+        'stripe_price_id',
     ];
 
     public function user()

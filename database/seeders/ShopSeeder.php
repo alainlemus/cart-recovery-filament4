@@ -15,7 +15,6 @@ class ShopSeeder extends Seeder
     {
         Shop::factory()->create([
             'name' => 'Demo Shop',
-            'domain' => 'demoshop.myshopify.com',
             'access_token' => 'demo_access_token_123456',
             'shopify_domain' => 'demoshop.myshopify.com',
             'user_id' => 2, // Assuming user with ID 2 exists

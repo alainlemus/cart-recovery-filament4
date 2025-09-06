@@ -18,7 +18,6 @@ class ShopFactory extends Factory
     {
         return [
             'name' => $this->faker->company,
-            'domain' => $this->faker->unique()->domainName,
             'access_token' => $this->faker->sha256,
             'shopify_domain' => $this->faker->domainName,
             'user_id' => \App\Models\User::factory(),

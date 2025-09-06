@@ -47,4 +47,9 @@ class Subscription extends Model
         return $this->hasMany(Shop::class);
     }
 
+    public function items()
+    {
+        return $this->hasMany(SubscriptionItem::class);
+    }
+
 }

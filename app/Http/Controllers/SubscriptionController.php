@@ -69,16 +69,10 @@ class SubscriptionController extends Controller
                 'customer' => $stripeCustomerId,
                 'payment_method_types' => ['card'],
                 'line_items' => [[
-                    'price_data' => [
-                        'currency' => 'USD',
-                        'product_data' => [
-                            'name' => $plan->name,
-                        ],
-                        'unit_amount' => intval($plan->price * 100), // en centavos
-                    ],
+                    'price' => $plan->stripe_price_id,
                     'quantity' => 1,
                 ]],
-                'mode' => 'payment',
+                'mode' => 'subscription',
                 'success_url' => route('subscription.success', ['user' => $user->id]). '&session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => route('subscription.create', ['plan' => $plan->id]),
             ]);
@@ -93,7 +87,6 @@ class SubscriptionController extends Controller
                 'stripe_price' => $plan->price,
                 'quantity' => 1,
                 'start_at' => now(),
-                'ends_at' => now()->addMonth(1), // o calcula según tu plan
             ]);
 
             // Redirigir al checkout de Stripe
@@ -127,7 +120,7 @@ class SubscriptionController extends Controller
         $subscription->update([
             'stripe_status' => 'active',
             'start_at' => now(),
-            'ends_at' => null, // o calcula según tu plan
+            'ends_at' => now()->addMonth(1), // o calcula según tu plan
         ]);
 
         Log::info("Suscripción activada: " . $subscription->stripe_id);

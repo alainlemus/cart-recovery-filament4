@@ -15,12 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('shop_id')->constrained()->onDelete('cascade');
+            $table->string('shopify_id')->unique();
             $table->json('items')->nullable(); // Store cart items as JSON
             $table->decimal('total_price', 10, 2);
             $table->string('status')->default('active'); // e.g., active, abandoned, completed
             $table->timestamp('abandoned_at')->nullable();
             $table->string('email_client')->nullable(); // Email client used to send recovery emails
             $table->string('phone_client')->nullable(); // Phone client used to send recovery SMS
+            $table->string('abandoned_checkout_url')->nullable();
             $table->timestamps();
         });
     }

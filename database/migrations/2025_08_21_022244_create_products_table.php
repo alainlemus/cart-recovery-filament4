@@ -20,6 +20,7 @@ return new class extends Migration
             $table->json('features')->nullable();
             $table->boolean('is_active')->default(true);
             $table->string('stripe_product_id')->nullable();
+            $table->string('stripe_price_id')->nullable();
             $table->timestamps();
         });
     }
