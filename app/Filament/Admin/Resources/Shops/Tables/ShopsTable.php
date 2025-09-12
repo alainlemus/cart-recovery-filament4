@@ -18,10 +18,9 @@ class ShopsTable
                     ->searchable(),
                 TextColumn::make('shopify_domain')
                     ->searchable(),
-                TextColumn::make('shopify_api_key')
-                    ->searchable(),
-                TextColumn::make('shopify_api_secret')
-                    ->searchable(),
+                TextColumn::make('access_token')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

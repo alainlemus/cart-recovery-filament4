@@ -42,6 +42,8 @@ return [
 
     'shopify' => [
         'api_version' => env('SHOPIFY_API_VERSION', '2025-07'),
+        'api_key' => env('SHOPIFY_API_KEY'),
+        'api_secret' => env('SHOPIFY_API_SECRET'),
         'redirect_uri' => env('SHOPIFY_REDIRECT_URI'),
         'scopes' => env('SHOPIFY_SCOPES', 'read_products,write_products,read_orders,write_orders,read_checkouts,write_checkouts'),
     ],

@@ -16,6 +16,7 @@ class CartSeeder extends Seeder
         Cart::factory()->create([
             'user_id' => 2, // Assuming user with ID 3 exists
             'shop_id' => 1, // Assuming shop with ID 1 exists
+            'shopify_id' => 'abc123',
             'items' => json_encode([
                 ['product_id' => 1, 'quantity' => 2, 'price' => 19.99],
                 ['product_id' => 2, 'quantity' => 1, 'price' => 9.99],
@@ -23,6 +24,7 @@ class CartSeeder extends Seeder
             'total_price' => 49.97,
             'status' => 'abandoned',
             'abandoned_at' => now()->subDays(1),
+            'abandoned_checkout_url' => 'https://demoshop.myshopify.com/checkout/abc123',
             'email_client' => 'Mailgun',
             'phone_client' => 'Twilio',
         ]);

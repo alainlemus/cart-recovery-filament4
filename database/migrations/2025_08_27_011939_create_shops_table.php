@@ -19,8 +19,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('subscription_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('product_id')->nullable()->constrained()->onDelete('set null');
-            $table->string('shopify_api_key');
-            $table->string('shopify_api_secret');
             $table->timestamps();
         });
     }

@@ -2,9 +2,6 @@
 
 namespace App\Filament\Resources\AbandonedCheckouts;
 
-use App\Filament\Resources\AbandonedCheckouts\Pages\CreateAbandonedCheckout;
-use App\Filament\Resources\AbandonedCheckouts\Pages\EditAbandonedCheckout;
-use App\Filament\Resources\AbandonedCheckouts\Pages\ListAbandonedCheckouts;
 use App\Filament\Resources\AbandonedCheckouts\Schemas\AbandonedCheckoutForm;
 use App\Filament\Resources\AbandonedCheckouts\Tables\AbandonedCheckoutsTable;
 use App\Models\Cart;
@@ -36,20 +33,26 @@ class AbandonedCheckoutResource extends Resource
         return AbandonedCheckoutsTable::configure($table);
     }
 
-    public static function getTableQuery()
+    // Método estático para obtener los checkouts de Shopify
+    public static function fetchAbandonedCheckouts(Shop $shop)
     {
         $user = Auth::user();
 
-        // Buscar la tienda asociada al usuario
-        $shop = Shop::where('user_id', $user->id)->first();
+        Log::info('Obteniendo checkouts abandonados para el usuario', [
+            'user_id' => $user ? $user->id : null,
+            'context' => 'AbandonedCheckoutResource::fetchAbandonedCheckouts'
+        ]);
 
         if (!$shop) {
-            return collect(); // sin tienda
+            Log::warning('No se encontró tienda para el usuario', ['user_id' => $user->id]);
+            return collect();
         }
 
         $response = Http::withHeaders([
             'X-Shopify-Access-Token' => $shop->access_token,
-        ])->get("https://{$shop->shopify_domain}/admin/api/2025-07/checkouts.json");
+        ])->get("https://{$shop->shopify_domain}/admin/api/2025-07/checkouts.json", [
+            'limit' => 10, // Ajusta el límite según necesites
+        ]);
 
         Log::info('Respuesta checkouts abandonados', [
             'body' => $response->body(),
@@ -57,16 +60,21 @@ class AbandonedCheckoutResource extends Resource
         ]);
 
         if ($response->failed()) {
+            Log::error('Error al obtener checkouts', ['error' => $response->json()]);
             return collect();
         }
 
         $checkouts = $response->json('checkouts') ?? [];
 
-        // Transformar para mostrar en tabla
+        Log::info('Checkouts obtenidos', ['productos' => $checkouts]);
+
         return collect($checkouts)->map(function ($checkout) {
             return [
-                'email' => $checkout['email'] ?? 'Desconocido',
-                'line_items' => collect($checkout['line_items'])->pluck('title')->join(', '),
+                'id' => $checkout['id'],
+                'shopify_id' => $checkout['id'],
+                'email' => $checkout['email'],
+                'id_cart' => $checkout['id'],
+                'items' => $checkout,
                 'total_price' => $checkout['total_price'] ?? '0.00',
                 'created_at' => $checkout['created_at'] ?? null,
                 'abandoned_checkout_url' => $checkout['abandoned_checkout_url'] ?? null,

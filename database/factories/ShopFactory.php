@@ -23,8 +23,6 @@ class ShopFactory extends Factory
             'user_id' => \App\Models\User::factory(),
             'subscription_id' => \App\Models\Subscription::factory(),
             'product_id' => \App\Models\Product::factory(),
-            'shopify_api_key' => $this->faker->uuid,
-            'shopify_api_secret' => $this->faker->sha256,
         ];
     }
 }

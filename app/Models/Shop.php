@@ -18,8 +18,6 @@ class Shop extends Model
         'user_id',
         'subscription_id',
         'product_id',
-        'shopify_api_key',
-        'shopify_api_secret',
         'stripe_price_id',
     ];
 

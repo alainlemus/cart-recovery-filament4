@@ -43,7 +43,7 @@ class ShopifyAuthController extends Controller
         }
 
         // Parámetros para la URL de autorización de Shopify
-        $api_key = $shop->shopify_api_key;
+        $api_key = config('services.shopify.api_key');
         $scopes = config('services.shopify.scopes'); // Ajusta los permisos según tus necesidades
         $redirect_uri = config('services.shopify.redirect_uri'); // Debe coincidir con la URL configurada en la app de Shopify
         $state = Str::random(40); // Generar un state único para CSRF
@@ -115,8 +115,8 @@ class ShopifyAuthController extends Controller
 
         // Obtener el access_token
         $response = Http::post("https://{$shop->shopify_domain}/admin/oauth/access_token", [
-            'client_id' => $shop->shopify_api_key,
-            'client_secret' => $shop->shopify_api_secret,
+            'client_id' => config('services.shopify.api_key'),
+            'client_secret' => config('services.shopify.api_secret'),
             'code' => $request->query('code'),
         ]);
 

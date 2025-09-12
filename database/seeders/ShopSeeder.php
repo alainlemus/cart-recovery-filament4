@@ -20,8 +20,6 @@ class ShopSeeder extends Seeder
             'user_id' => 2, // Assuming user with ID 2 exists
             'subscription_id' => 1, // No subscription initially
             'product_id' => 1, // No product initially
-            'shopify_api_key' => 'demo_api_key_123456',
-            'shopify_api_secret' => 'demo_api_secret_123456',
         ]);
     }
 }

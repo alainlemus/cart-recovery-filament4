@@ -15,10 +15,6 @@ class ShopForm
                     ->required(),
                 TextInput::make('shopify_domain')
                     ->required(),
-                TextInput::make('shopify_api_key')
-                    ->required(),
-                TextInput::make('shopify_api_secret')
-                    ->required(),
             ]);
     }
 }

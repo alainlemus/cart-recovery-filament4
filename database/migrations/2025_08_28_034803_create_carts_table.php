@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
+            $table->string('id_cart');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('shop_id')->constrained()->onDelete('cascade');
-            $table->string('shopify_id')->unique();
-            $table->json('items')->nullable(); // Store cart items as JSON
+            $table->string('shopify_id')->unique()->nullable();
+            $table->json('response')->nullable(); // Store cart items as JSON
             $table->decimal('total_price', 10, 2);
             $table->string('status')->default('active'); // e.g., active, abandoned, completed
             $table->timestamp('abandoned_at')->nullable();

@@ -10,12 +10,13 @@ class Cart extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id_cart',
         'shop_id',
         'user_id',
         'shopify_id',           // ID del checkout en Shopify
         'email_client',
         'phone_client',
-        'items',
+        'response',
         'total_price',
         'status',
         'abandoned_at',
