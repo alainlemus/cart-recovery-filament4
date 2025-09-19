@@ -14,7 +14,8 @@
         "livewire/flux": "^2.1.1",
         "livewire/volt": "^1.7.0",
         "maartenpaauw/filament-cashier-billing-provider": "^3.0",
-        "stripe/stripe-php": "^16.6"
+        "stripe/stripe-php": "^16.6",
+        "twilio/sdk": "^8.8"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

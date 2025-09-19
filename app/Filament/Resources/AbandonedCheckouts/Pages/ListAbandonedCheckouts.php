@@ -18,7 +18,7 @@ class ListAbandonedCheckouts extends ListRecords
     {
         return [
             Action::make('sincronizarCheckouts')
-                ->label('Sincronizar Checkouts')
+                ->label('Synchronize Checkouts')
                 ->icon('heroicon-o-arrow-path')
                 ->action(function () {
 
@@ -41,9 +41,10 @@ class ListAbandonedCheckouts extends ListRecords
                                     'shop_id' => $shop->id,
                                     'email_client' => $checkout['email'],
                                     'phone_client' => '+525531293712',
-                                    'response' => $checkout,
+                                    'response' => json_encode($checkout),
                                     'total_price' => $checkout['total_price'],
                                     'created_at' => $checkout['created_at'],
+                                    'abandoned_at' => $checkout['abandoned_at'],
                                     'abandoned_checkout_url' => $checkout['abandoned_checkout_url'],
                                 ]
                             );

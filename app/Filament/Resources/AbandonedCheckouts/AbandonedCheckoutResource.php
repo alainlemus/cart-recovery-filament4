@@ -74,9 +74,10 @@ class AbandonedCheckoutResource extends Resource
                 'shopify_id' => $checkout['id'],
                 'email' => $checkout['email'],
                 'id_cart' => $checkout['id'],
-                'items' => $checkout,
+                'response' => $checkout,
                 'total_price' => $checkout['total_price'] ?? '0.00',
                 'created_at' => $checkout['created_at'] ?? null,
+                'abandoned_at' => $checkout['created_at'],
                 'abandoned_checkout_url' => $checkout['abandoned_checkout_url'] ?? null,
             ];
         });

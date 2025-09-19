@@ -18,8 +18,8 @@ class Cart extends Model
         'phone_client',
         'response',
         'total_price',
-        'status',
         'abandoned_at',
+        'currency',
         'abandoned_checkout_url',
     ];
 
