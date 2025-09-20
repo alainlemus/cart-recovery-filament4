@@ -20,7 +20,7 @@ class ShopResource extends Resource
 {
     protected static ?string $model = Shop::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::ShoppingBag;
 
     protected static ?string $recordTitleAttribute = 'Shop';
 

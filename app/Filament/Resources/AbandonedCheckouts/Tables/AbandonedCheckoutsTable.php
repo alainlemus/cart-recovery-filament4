@@ -243,8 +243,18 @@ class AbandonedCheckoutsTable
                                             );
                                             $value = $get('discount_value') ?? 10;
                                             $prefix = $get('discount_code') ?? 'CART';
-                                            $coupon = $service->createDiscountCode($prefix, $value);
-                                            $component->state(is_string($coupon) ? $coupon : 'Error generating coupon');
+                                            $couponData = $service->createDiscountCode($prefix, $value);
+
+                                            if (is_array($couponData)) {
+                                                // Guardar o actualizar el cupón en la base de datos
+                                                \App\Models\Coupon::updateOrCreate(
+                                                    ['code' => $couponData['code']],
+                                                    $couponData
+                                                );
+                                                $component->state($couponData['code']);
+                                            } else {
+                                                $component->state('Error generating coupon');
+                                            }
                                         }
                                     })
                                 ]),
