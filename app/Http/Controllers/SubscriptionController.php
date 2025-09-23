@@ -126,7 +126,7 @@ class SubscriptionController extends Controller
         Log::info("Suscripción activada: " . $subscription->stripe_id);
 
         // Redirigir al panel de Filament
-        return redirect()->to('http://cart-recovery.test/admin-shop')
+        return redirect()->to(env('APP_URL').'/admin-shop')
             ->with('success', '¡Suscripción activada! Bienvenido a tu panel.');
     }
 

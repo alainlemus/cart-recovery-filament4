@@ -6,6 +6,7 @@ use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\ShopifyAuthController;
+use App\Http\Controllers\ShopifyWebhookController;
 use App\Http\Middleware\CheckRole;
 
 Route::get('/', function () {
@@ -19,6 +20,10 @@ Route::get('/subscription/success', [SubscriptionController::class, 'success'])-
 // shopify routes
 Route::get('/shopify/auth/{shop_id}', [ShopifyAuthController::class, 'auth'])->name('shopify.auth');
 Route::get('/shopify/callback', [ShopifyAuthController::class, 'callback'])->name('shopify.callback');
+
+// webhooks shopify
+Route::post('/webhooks/orders/create', [ShopifyWebhookController::class, 'handleOrderCreate']);
+Route::post('/webhooks/checkouts/create', [ShopifyWebhookController::class, 'handleCheckoutCreate']);
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
