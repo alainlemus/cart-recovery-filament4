@@ -13,7 +13,7 @@ class ShopifyWebhookController extends Controller
     {
         $hmacHeader = $request->header('X-Shopify-Hmac-Sha256');
         $data = $request->getContent();
-        $calculatedHmac = base64_encode(hash_hmac('sha256', $data, config('services.shopify.webhook_secret'), true));
+        $calculatedHmac = base64_encode(hash_hmac('sha256', $data, config('services.shopify.api_secret'), true));
 
         if (!hash_equals($hmacHeader, $calculatedHmac)) {
             Log::warning('Shopify webhook signature mismatch');
@@ -41,7 +41,7 @@ class ShopifyWebhookController extends Controller
     {
         $hmacHeader = $request->header('X-Shopify-Hmac-Sha256');
         $data = $request->getContent();
-        $calculatedHmac = base64_encode(hash_hmac('sha256', $data, config('services.shopify.webhook_secret'), true));
+        $calculatedHmac = base64_encode(hash_hmac('sha256', $data, config('services.shopify.api_secret'), true));
 
         if (!hash_equals($hmacHeader, $calculatedHmac)) {
             Log::warning('Shopify webhook signature mismatch');
