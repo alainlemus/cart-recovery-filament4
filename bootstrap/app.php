@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->excludeFromCsrfProtection([
+            '/webhooks/orders/create',
+            '/webhooks/checkouts/create',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
