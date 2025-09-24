@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartRecoveryController;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -20,6 +21,7 @@ Route::get('/subscription/success', [SubscriptionController::class, 'success'])-
 // shopify routes
 Route::get('/shopify/auth/{shop_id}', [ShopifyAuthController::class, 'auth'])->name('shopify.auth');
 Route::get('/shopify/callback', [ShopifyAuthController::class, 'callback'])->name('shopify.callback');
+Route::get('/recover-cart/{token}', [CartRecoveryController::class, 'recover'])->name('cart.recover');
 
 // webhooks shopify
 Route::post('/webhooks/orders/create', [ShopifyWebhookController::class, 'handleOrderCreate']);

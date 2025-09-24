@@ -9,6 +9,7 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Actions\CreateAction;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ListAbandonedCheckouts extends ListRecords
 {
@@ -46,6 +47,8 @@ class ListAbandonedCheckouts extends ListRecords
                                     'created_at' => $checkout['created_at'],
                                     'abandoned_at' => $checkout['abandoned_at'],
                                     'abandoned_checkout_url' => $checkout['abandoned_checkout_url'],
+                                    'recovery_token' => $existingCart?->recovery_token ?? Str::uuid(),
+                                    'status' => 'abandoned',
                                 ]
                             );
                         }

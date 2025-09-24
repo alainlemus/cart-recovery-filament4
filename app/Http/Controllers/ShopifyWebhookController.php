@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ShopifyWebhookController extends Controller
 {
@@ -82,6 +83,7 @@ class ShopifyWebhookController extends Controller
                     'total_price' => $payload['total_price'] ?? 0,
                     'abandoned_at' => $payload['created_at'] ?? now(),
                     'abandoned_checkout_url' => $payload['abandoned_checkout_url'] ?? null,
+                    'recovery_token' => $existingCart?->recovery_token ?? Str::uuid(),
                     'status' => 'abandoned',
                 ]
             );

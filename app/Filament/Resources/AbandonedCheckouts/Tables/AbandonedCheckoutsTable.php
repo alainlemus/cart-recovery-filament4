@@ -27,6 +27,8 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Mail;
 
+use Illuminate\Support\Facades\URL;
+
 class AbandonedCheckoutsTable
 {
     public static function configure(Table $table): Table
@@ -285,11 +287,11 @@ class AbandonedCheckoutsTable
                             $message .= "\n\n🎁 Use this coupon for your purchase: {$data['discount_code']}";
                         }
 
-
+                        $recoveryUrl = route('cart.recover', ['token' => $record->recovery_token]);
                         // 1. Enviar WhatsApp
                         if (!empty($record['phone_client']) && $record['phone_client'] && !empty($record['phone_client'])) {
                             $phone = preg_replace('/\D/', '', $record['phone_client']); // limpiar
-                            $message .= "\n\n🛒 Recover your cart here: {$record->abandoned_checkout_url}";
+                            $message .= "\n\n🛒 Recover your cart here: {$recoveryUrl}";
 
                             $ok = TwilioWhatsAppService::sendMessage($phone, $message);
 
@@ -314,7 +316,7 @@ class AbandonedCheckoutsTable
                             Mail::to($record['email_client'])->send(new CartRecoveryMail([
                                 'email' => $record['email_client'],
                                 'description' => $message,
-                                'checkout_url' => $record['abandoned_checkout_url'],
+                                'checkout_url' => $recoveryUrl,
                                 'total_price' => $record['total_price'] ?? null,
                                 'currency' => $record['response.currency'] ?? null,
                             ]));
