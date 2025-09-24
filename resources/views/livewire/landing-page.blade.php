@@ -3,8 +3,11 @@
     <section class="bg-white dark:bg-gray-900">
         <nav x-data="{ isOpen: false }" class="container p-6 mx-auto lg:flex lg:justify-between lg:items-center">
             <div class="flex items-center justify-between">
-                <a href="#">
-                    <img class="w-auto h-6 sm:h-7" src="https://merakiui.com/images/full-logo.svg" alt="">
+                <a href="{{ route('home') }}" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-blue-600 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A1 1 0 007.6 17h8.8a1 1 0 00.95-.68L21 13M7 13V6h13" />
+                    </svg>
+                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">CART RECOVERY</span>
                 </a>
 
                 <!-- Mobile menu button -->
@@ -23,28 +26,22 @@
 
             <!-- Mobile Menu open: "block", Menu closed: "hidden" -->
             <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']" class="absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white shadow-md lg:bg-transparent lg:dark:bg-transparent lg:shadow-none dark:bg-gray-900 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center">
-                <div class="flex flex-col space-y-4 lg:mt-0 lg:flex-row lg:-px-8 lg:space-y-0">
-                    <a class="text-gray-700 transition-colors duration-300 transform lg:mx-8 dark:text-gray-200 dark:hover:text-blue-400 hover:text-blue-500" href="#">Home</a>
-                    <a class="text-gray-700 transition-colors duration-300 transform lg:mx-8 dark:text-gray-200 dark:hover:text-blue-400 hover:text-blue-500" href="#">Components</a>
-                    <a class="text-gray-700 transition-colors duration-300 transform lg:mx-8 dark:text-gray-200 dark:hover:text-blue-400 hover:text-blue-500" href="#">Pricing</a>
-                    <a class="text-gray-700 transition-colors duration-300 transform lg:mx-8 dark:text-gray-200 dark:hover:text-blue-400 hover:text-blue-500" href="#">Contact</a>
-                </div>
-
-                <a class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-blue-600 rounded-lg lg:mt-0 hover:bg-blue-500 lg:w-auto" href="route('subscription.create')">
-                    Get started
+                <a class="mx-4 block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-green-600 rounded-lg lg:mt-0 hover:bg-green-500 lg:w-auto" href="{{ config('app.url') }}/admin-shop">
+                    Log in
+                </a>
+                <a class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-blue-600 rounded-lg lg:mt-0 hover:bg-blue-500 lg:w-auto" href="#prices">
+                    Start Recovering Carts
                 </a>
             </div>
         </nav>
 
         <div class="container px-6 py-16 mx-auto text-center">
             <div class="max-w-lg mx-auto">
-                <h1 class="text-3xl font-semibold text-gray-800 dark:text-white lg:text-4xl">Building Your Next App with our Awesome components</h1>
-                <p class="mt-6 text-gray-500 dark:text-gray-300">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Libero similique
-                    obcaecati illum mollitia.</p>
-                <button class="px-5 py-2 mt-6 text-sm font-medium leading-5 text-center text-white capitalize bg-blue-600 rounded-lg hover:bg-blue-500 lg:mx-0 lg:w-auto focus:outline-none">
-                    Start 14-Day free trial
-                </button>
-                <p class="mt-3 text-sm text-gray-400 ">No credit card required</p>
+                <h1 class="text-3xl font-semibold text-gray-800 dark:text-white lg:text-4xl">Recover Abandoned Shopify Carts & Boost Sales Automatically</h1>
+                <p class="mt-6 text-gray-500 dark:text-gray-300 pb-6">Our platform helps you recover lost sales by automating cart recovery emails and offering personalized discount codes to your customers. Increase your conversion rate and maximize your Shopify store revenue with zero hassle.</p>
+                <a class="px-5 py-2 mt-6 text-sm font-medium leading-5 text-center text-white capitalize bg-blue-600 rounded-lg hover:bg-blue-500 lg:mx-0 lg:w-auto focus:outline-none" href="#prices">
+                    Try 7-Day Free Trial
+                </a>
             </div>
 
             <div class="flex justify-center mt-10">
@@ -53,11 +50,11 @@
         </div>
     </section>
 
-    <section class="bg-white dark:bg-gray-900">
+    <section id="prices" class="bg-white dark:bg-gray-900">
         <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
             <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
-                <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Designed for business teams like yours</h2>
-                <p class="mb-5 font-light text-gray-500 sm:text-xl dark:text-gray-400">Here at Flowbite we focus on markets where technology, innovation, and capital can unlock long-term value and drive economic growth.</p>
+                <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Designed for Shopify Stores of All Sizes</h2>
+                <p class="mb-5 font-light text-gray-500 sm:text-xl dark:text-gray-400">We focus on helping Shopify merchants recover abandoned carts, automate discount code creation, and drive more sales with smart, targeted campaigns.</p>
             </div>
             <div class="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
 
@@ -99,7 +96,7 @@
                                 <span>Free updates: <span class="font-semibold">6 months</span></span>
                             </li>
                         </ul>
-                        <a href="{{ route('subscription.create', ['plan' => $plan]) }}" class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">Get started</a>
+                        <a href="{{ route('subscription.create', ['plan' => $plan]) }}" class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900 hover:ring-4">Get started</a>
                     </div>
 
                 @endforeach

@@ -23,6 +23,11 @@ class ShopifyWebhookController extends Controller
         $payload = $request->json()->all();
         Log::info('Shopify Order Created Webhook Received', $payload);
 
+        if (isset($payload['id']) && $payload['id'] === 'exampleOrderId') {
+            Log::info('Se recibió una orden de prueba, no se procesa', ['response' => $payload]);
+            return response('Test order received', 200);
+        }
+
         // Buscar el carrito por el checkout token o id de Shopify
         $cart = Cart::where('shopify_id', $payload['checkout_id'] ?? null)
             ->orWhere('id_cart', $payload['checkout_id'] ?? null)
