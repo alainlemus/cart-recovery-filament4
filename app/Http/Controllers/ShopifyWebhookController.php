@@ -60,21 +60,29 @@ class ShopifyWebhookController extends Controller
         $shop = Shop::where('shopify_domain', $payload['shop_domain'] ?? null)->first();
 
         if ($shop) {
-            Cart::updateOrCreate(
-                ['shopify_id' => $payload['id']],
+
+            if($shop->id == 'exampleCartId'){
+                Log::info('Se recibio un carrito de prueba, no se guarda en BD',
                 [
-                    'shop_id' => $shop->id,
-                    'user_id' => $shop->user_id,
-                    'id_cart' => $payload['id'],
-                    'email' => $payload['email'] ?? null,
-                    'response' => $payload,
-                    'total_price' => $payload['total_price'] ?? 0,
-                    'abandoned_at' => $payload['created_at'] ?? now(),
-                    'abandoned_checkout_url' => $payload['abandoned_checkout_url'] ?? null,
-                    'status' => 'abandoned',
-                ]
-            );
-            Log::info('Abandoned checkout registered', ['shopify_id' => $payload['id']]);
+                    'response' => $shop,
+                ]);
+            }else{
+                Cart::updateOrCreate(
+                    ['shopify_id' => $payload['id']],
+                    [
+                        'shop_id' => $shop->id,
+                        'user_id' => $shop->user_id,
+                        'id_cart' => $payload['id'],
+                        'email' => $payload['email'] ?? null,
+                        'response' => $payload,
+                        'total_price' => $payload['total_price'] ?? 0,
+                        'abandoned_at' => $payload['created_at'] ?? now(),
+                        'abandoned_checkout_url' => $payload['abandoned_checkout_url'] ?? null,
+                        'status' => 'abandoned',
+                    ]
+                );
+                Log::info('Abandoned checkout registered', ['shopify_id' => $payload['id']]);
+            }
         }
 
         return response('Webhook processed', 200);
