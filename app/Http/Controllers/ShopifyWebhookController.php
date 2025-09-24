@@ -34,7 +34,7 @@ class ShopifyWebhookController extends Controller
             ->first();
 
         if ($cart) {
-            $cart->status = 'completed';
+            $cart->status = 'complete';
             $cart->save();
             Log::info('Cart marked as completed', ['cart_id' => $cart->id]);
         }
