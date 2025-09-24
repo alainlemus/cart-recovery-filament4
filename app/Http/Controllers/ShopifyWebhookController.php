@@ -56,33 +56,32 @@ class ShopifyWebhookController extends Controller
         $payload = $request->json()->all();
         Log::info('Shopify Checkout Created Webhook Received', $payload);
 
+        if (isset($payload['id']) && $payload['id'] === 'exampleCartId') {
+            Log::info('Se recibió un carrito de prueba, no se guarda en BD', ['response' => $payload]);
+            return response('Test cart received', 200);
+        }
+
         // Registrar el checkout como abandonado si no existe
         $shop = Shop::where('shopify_domain', $payload['shop_domain'] ?? null)->first();
 
         if ($shop) {
 
-            if($shop->id == 'exampleCartId'){
-                Log::info('Se recibio un carrito de prueba, no se guarda en BD',
+            Cart::updateOrCreate(
+                ['shopify_id' => $payload['id']],
                 [
-                    'response' => $shop,
-                ]);
-            }else{
-                Cart::updateOrCreate(
-                    ['shopify_id' => $payload['id']],
-                    [
-                        'shop_id' => $shop->id,
-                        'user_id' => $shop->user_id,
-                        'id_cart' => $payload['id'],
-                        'email' => $payload['email'] ?? null,
-                        'response' => $payload,
-                        'total_price' => $payload['total_price'] ?? 0,
-                        'abandoned_at' => $payload['created_at'] ?? now(),
-                        'abandoned_checkout_url' => $payload['abandoned_checkout_url'] ?? null,
-                        'status' => 'abandoned',
-                    ]
-                );
-                Log::info('Abandoned checkout registered', ['shopify_id' => $payload['id']]);
-            }
+                    'shop_id' => $shop->id,
+                    'user_id' => $shop->user_id,
+                    'id_cart' => $payload['id'],
+                    'email' => $payload['email'] ?? null,
+                    'response' => $payload,
+                    'total_price' => $payload['total_price'] ?? 0,
+                    'abandoned_at' => $payload['created_at'] ?? now(),
+                    'abandoned_checkout_url' => $payload['abandoned_checkout_url'] ?? null,
+                    'status' => 'abandoned',
+                ]
+            );
+            Log::info('Abandoned checkout registered', ['shopify_id' => $payload['id']]);
+
         }
 
         return response('Webhook processed', 200);
