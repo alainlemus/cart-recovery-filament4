@@ -43,6 +43,11 @@ class ShopifyWebhookController extends Controller
         $data = $request->getContent();
         $calculatedHmac = base64_encode(hash_hmac('sha256', $data, config('services.shopify.api_secret'), true));
 
+        Log::info('HMAC Verification', [
+            'hmacHeader' => $hmacHeader,
+            'calculatedHmac' => $calculatedHmac,
+            'data' => $data,
+        ]);
         if (!hash_equals($hmacHeader, $calculatedHmac)) {
             Log::warning('Shopify webhook signature mismatch');
             return response('Unauthorized', 401);
