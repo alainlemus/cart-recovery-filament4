@@ -289,7 +289,7 @@ class AbandonedCheckoutsTable
 
                         $recoveryUrlWhatsapp = route('cart.recover', [
                             'token' => $record->recovery_token,
-                            'via' => 'whastapp'
+                            'via' => 'whatsapp'
                         ]);
 
                         // 1. Enviar WhatsApp
