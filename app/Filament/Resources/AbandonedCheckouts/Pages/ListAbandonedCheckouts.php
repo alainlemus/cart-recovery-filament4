@@ -35,6 +35,21 @@ class ListAbandonedCheckouts extends ListRecords
                         ]);
                         foreach ($checkouts as $checkout) {
                             $existingCart = Cart::where('shopify_id', $checkout['id'])->first();
+                            Log::info('Procesando checkout', [
+                                'checkout_id' => $checkout['id'],
+                                'existing_cart_id' => $existingCart ? $existingCart->id : null,
+                                'context' => 'ListAbandonedCheckouts::sincronizarCheckouts'
+                            ]);
+                            $recoveryToken = $existingCart && $existingCart->recovery_token
+                                ? $existingCart->recovery_token
+                                : (string) Str::uuid();
+
+                            Log::info('Asignando recovery token', [
+                                'checkout_id' => $checkout['id'],
+                                'recovery_token' => $recoveryToken,
+                                'context' => 'ListAbandonedCheckouts::sincronizarCheckouts'
+                            ]);
+
                             Cart::updateOrCreate(
                                 ['shopify_id' => $checkout['id']],
                                 [
@@ -48,7 +63,7 @@ class ListAbandonedCheckouts extends ListRecords
                                     'created_at' => $checkout['created_at'],
                                     'abandoned_at' => $checkout['abandoned_at'],
                                     'abandoned_checkout_url' => $checkout['abandoned_checkout_url'],
-                                    'recovery_token' => $existingCart?->recovery_token ?? Str::uuid(),
+                                    'recovery_token' => $recoveryToken,
                                     'status' => 'abandoned',
                                 ]
                             );

@@ -21,6 +21,12 @@ class Cart extends Model
         'abandoned_at',
         'currency',
         'abandoned_checkout_url',
+        'recovery_token',
+        'status',               // 'abandoned' o 'complete'
+        'clicked_at',
+        'recovered_at',
+        'recovered_via'
+
     ];
 
     protected $casts = [
