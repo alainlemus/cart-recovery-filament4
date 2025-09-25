@@ -29,10 +29,18 @@ class ShopifyWebhookController extends Controller
             return response('Test order received', 200);
         }
 
-        // Buscar el carrito por el checkout token o id de Shopify
+        // Buscar por checkout_id o recovery_token en note
+        $cart = null;
+        if (!empty($payload['note']) && str_starts_with($payload['note'], 'recovery_token:')) {
+            $token = str_replace('recovery_token:', '', $payload['note']);
+            $cart = Cart::where('recovery_token', $token)->first();
+        }
+
+        if (!$cart) {
         $cart = Cart::where('shopify_id', $payload['checkout_id'] ?? null)
             ->orWhere('id_cart', $payload['checkout_id'] ?? null)
             ->first();
+        }
 
         if ($cart) {
             $cart->status = 'complete';
