@@ -2,6 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\CartRecoveryChart;
+use App\Filament\Widgets\CartStatsWidget;
+use App\Filament\Widgets\CartStatsWidgetMoney;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -45,6 +48,9 @@ class AdminShopPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
+                CartStatsWidget::class,
+                CartStatsWidgetMoney::class,
+                CartRecoveryChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
