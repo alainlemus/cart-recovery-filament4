@@ -50,7 +50,7 @@ class ListAbandonedCheckouts extends ListRecords
                                 'context' => 'ListAbandonedCheckouts::sincronizarCheckouts'
                             ]);
 
-                            dd($checkout['response']['phone']);
+                            //dd($checkout['response']['phone']);
 
                             Cart::updateOrCreate(
                                 ['shopify_id' => $checkout['id']],
