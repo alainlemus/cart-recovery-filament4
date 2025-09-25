@@ -287,11 +287,15 @@ class AbandonedCheckoutsTable
                             $message .= "\n\n🎁 Use this coupon for your purchase: {$data['discount_code']}";
                         }
 
-                        $recoveryUrl = route('cart.recover', ['token' => $record->recovery_token]);
+                        $recoveryUrlWhatsapp = route('cart.recover', [
+                            'token' => $record->recovery_token,
+                            'via' => 'whastapp'
+                        ]);
+
                         // 1. Enviar WhatsApp
                         if (!empty($record['phone_client']) && $record['phone_client'] && !empty($record['phone_client'])) {
                             $phone = preg_replace('/\D/', '', $record['phone_client']); // limpiar
-                            $message .= "\n\n🛒 Recover your cart here: {$recoveryUrl}";
+                            $message .= "\n\n🛒 Recover your cart here: {$recoveryUrlWhatsapp}";
 
                             $ok = TwilioWhatsAppService::sendMessage($phone, $message);
 
@@ -312,11 +316,16 @@ class AbandonedCheckoutsTable
                         // 2. Enviar el correo
                         try {
 
+                            $recoveryUrlEmail = route('cart.recover', [
+                                'token' => $record->recovery_token,
+                                'via' => 'email'
+                            ]);
+
                             //dd($data, $record);
                             Mail::to($record['email_client'])->send(new CartRecoveryMail([
                                 'email' => $record['email_client'],
                                 'description' => $message,
-                                'checkout_url' => $recoveryUrl,
+                                'checkout_url' => $recoveryUrlEmail,
                                 'total_price' => $record['total_price'] ?? null,
                                 'currency' => $record['response.currency'] ?? null,
                             ]));
