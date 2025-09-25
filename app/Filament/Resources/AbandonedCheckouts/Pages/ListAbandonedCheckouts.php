@@ -34,6 +34,7 @@ class ListAbandonedCheckouts extends ListRecords
                             'context' => 'ListAbandonedCheckouts::sincronizarCheckouts'
                         ]);
                         foreach ($checkouts as $checkout) {
+                            $existingCart = Cart::where('shopify_id', $checkout['id'])->first();
                             Cart::updateOrCreate(
                                 ['shopify_id' => $checkout['id']],
                                 [

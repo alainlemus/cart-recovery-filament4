@@ -80,6 +80,8 @@ class ShopifyWebhookController extends Controller
 
         if ($shop) {
 
+            $existingCart = Cart::where('shopify_id', $payload['id'])->first();
+
             Cart::updateOrCreate(
                 ['shopify_id' => $payload['id']],
                 [
