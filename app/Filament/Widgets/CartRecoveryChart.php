@@ -55,7 +55,7 @@ class CartRecoveryChart extends ChartWidget
             $emailCount = Cart::whereIn('shop_id', $shopIds)
                 ->where('status', 'complete')
                 ->where('recovered_via', 'email')
-                ->whereRaw("TO_CHAR(updated_at, 'YYYY-MM') = ?", [$month])
+                ->whereRaw("DATE_FORMAT(updated_at, '%Y-%m') = ?", [$month])
                 ->count();
             $emailData[] = $emailCount;
             logger()->info("Email count for $month: $emailCount");
@@ -63,7 +63,7 @@ class CartRecoveryChart extends ChartWidget
             $whatsappCount = Cart::whereIn('shop_id', $shopIds)
                 ->where('status', 'complete')
                 ->where('recovered_via', 'whatsapp')
-                ->whereRaw("TO_CHAR(updated_at, 'YYYY-MM') = ?", [$month])
+                ->whereRaw("DATE_FORMAT(updated_at, '%Y-%m') = ?", [$month])
                 ->count();
             $whatsappData[] = $whatsappCount;
             logger()->info("WhatsApp count for $month: $whatsappCount");
