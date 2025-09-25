@@ -50,6 +50,8 @@ class ListAbandonedCheckouts extends ListRecords
                                 'context' => 'ListAbandonedCheckouts::sincronizarCheckouts'
                             ]);
 
+                            dd($checkout['response']['phone']);
+
                             Cart::updateOrCreate(
                                 ['shopify_id' => $checkout['id']],
                                 [
@@ -57,7 +59,7 @@ class ListAbandonedCheckouts extends ListRecords
                                     'user_id' => $user->id,
                                     'shop_id' => $shop->id,
                                     'email_client' => $checkout['email'],
-                                    'phone_client' => $checkout['phone'] != null ? $checkout['phone'] :'+5215531293712',
+                                    'phone_client' => $checkout['response']['phone'] != null ? $checkout['phone'] :'+5215531293712',
                                     'response' => json_encode($checkout),
                                     'total_price' => $checkout['total_price'],
                                     'created_at' => $checkout['created_at'],
