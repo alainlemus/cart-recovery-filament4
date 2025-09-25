@@ -5,12 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class CartRecoveryController extends Controller
 {
     public function recover(Request $request, string $token)
     {
         $cart = Cart::where('recovery_token', $token)->firstOrFail();
+
+        Log::info('Cart recovery link accessed', [
+            'cart' => $cart,
+            'via method' => $request->query('via', 'unknown'),
+        ]);
 
         if (!$cart->clicked_at) {
             $cart->clicked_at = now();
