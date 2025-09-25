@@ -4,7 +4,7 @@ namespace App\Filament\Resources\AbandonedCheckouts\Tables;
 
 use App\Mail\CartRecoveryMail;
 use App\services\ShopifyDiscountService;
-use App\Services\TwilioWhatsAppService;
+use App\services\TwilioWhatsAppService;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
