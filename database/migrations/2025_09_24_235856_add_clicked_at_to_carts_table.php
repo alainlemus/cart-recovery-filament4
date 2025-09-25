@@ -13,7 +13,6 @@ return new class extends Migration
     {
        Schema::table('carts', function (Blueprint $table) {
             $table->timestamp('clicked_at')->nullable()->after('recovery_token');
-            $table->string('recovered_via')->nullable()->after('clicked_at'); // 'email', 'whatsapp', etc.
         });
     }
 
@@ -23,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('carts', function (Blueprint $table) {
-            $table->dropColumn(['clicked_at', 'recovered_via']);
+            $table->dropColumn(['clicked_at']);
         });
     }
 };
