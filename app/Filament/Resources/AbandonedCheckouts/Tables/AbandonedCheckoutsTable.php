@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\AbandonedCheckouts\Tables;
 
 use App\Mail\CartRecoveryMail;
-use App\Services\ShopifyDiscountService;
+use App\services\ShopifyDiscountService;
 use App\Services\TwilioWhatsAppService;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
