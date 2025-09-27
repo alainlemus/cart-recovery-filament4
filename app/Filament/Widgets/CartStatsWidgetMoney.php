@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Auth;
 
 class CartStatsWidgetMoney extends StatsOverviewWidget
 {
+    protected ?string $heading = 'Analytics in Money';
+
+    protected ?string $description = 'An overview of monetary data.';
+
     protected function getStats(): array
     {
         $user = Auth::user();

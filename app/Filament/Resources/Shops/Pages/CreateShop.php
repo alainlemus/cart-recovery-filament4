@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Shops\Pages;
 
 use App\Filament\Resources\Shops\ShopResource;
+use App\Models\Shop;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -38,6 +40,17 @@ class CreateShop extends CreateRecord
                 'context' => 'CreateShop::handleRecordCreation'
             ]);
             throw new \Exception('No hay usuario autenticado.');
+        }
+
+        // Validar que el dominio no esté registrado
+        if (Shop::where('shopify_domain', $data['shopify_domain'])->exists()) {
+            Notification::make()
+                ->title('The store is already registered')
+                ->body('The domain ' . $data['shopify_domain'] . ' already exists in the system.')
+                ->danger()
+                ->persistent()
+                ->send();
+            $this->halt(); // Detiene el proceso y cierra el modal sin lanzar excepción
         }
 
         // Obtener la última suscripción activa, seleccionando solo los campos necesarios

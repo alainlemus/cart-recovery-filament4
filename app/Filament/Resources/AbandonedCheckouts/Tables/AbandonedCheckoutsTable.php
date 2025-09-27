@@ -33,8 +33,15 @@ class AbandonedCheckoutsTable
 {
     public static function configure(Table $table): Table
     {
+        $user = auth()->user();
+        $hasMultipleShops = $user && $user->shops()->count() > 1;
+
         return $table
             ->columns([
+                // Si el usuario tiene más de una tienda, muestra la columna de tienda
+                ...($hasMultipleShops ? [
+                    TextColumn::make('shop.name')->label('Store'),
+                ] : []),
                 TextColumn::make('id_cart')->label('Checkout ID'),
                 TextColumn::make('email_client')->label('Email'),
                 TextColumn::make('total_price')->label('Total')->money(fn ($record) => $record->currency),
@@ -45,6 +52,7 @@ class AbandonedCheckoutsTable
                     ->url(fn ($record) => $record->abandoned_checkout_url) // usa el valor real como enlace
                     ->openUrlInNewTab(),
             ])
+            ->defaultGroup($hasMultipleShops ? 'shop.name' : null) // Agrupar por tienda si tiene más de una
             ->paginated(false) // Shopify API ya pagina
             ->filters([
                 //
