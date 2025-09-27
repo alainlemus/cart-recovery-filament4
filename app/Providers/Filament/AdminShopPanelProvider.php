@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Widgets\CartRecoveryChart;
 use App\Filament\Widgets\CartStatsWidget;
 use App\Filament\Widgets\CartStatsWidgetMoney;
+use App\Filament\Widgets\AccountInfoWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;

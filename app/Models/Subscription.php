@@ -25,6 +25,7 @@ class Subscription extends Model
         'start_at',
         'ends_at',
         'product_id',
+        'card_last_four',
     ];
 
     protected $casts = [
@@ -39,7 +40,7 @@ class Subscription extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     public function shops(): HasMany

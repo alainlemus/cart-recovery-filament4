@@ -11,6 +11,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class CouponsTable
@@ -19,7 +20,7 @@ class CouponsTable
     {
         return $table
             ->query(
-                Coupon::query()->where('user_id', auth()->id())
+                Coupon::query()->where('user_id', Auth::id())
             )
             ->columns([
                 TextColumn::make('shopify_id')

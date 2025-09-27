@@ -110,17 +110,31 @@ class SubscriptionController extends Controller
         Log::info("Respuesta de registro de suscripcion en STRIPE: " . $request);
 
         $user = Auth::user();
-
         $stripeSessionId = $request->query('session_id');
 
         // Buscar la suscripción en tu tabla usando el session_id
         $subscription = Subscription::where('stripe_id', $stripeSessionId)->firstOrFail();
 
-        // Actualizar estado
+        // Obtener los últimos 4 dígitos de la tarjeta desde Stripe
+        try {
+            Stripe::setApiKey(config('cashier.secret'));
+            $session = \Stripe\Checkout\Session::retrieve($stripeSessionId);
+            $subscriptionStripeId = $session->subscription;
+            $stripeSubscription = \Stripe\Subscription::retrieve($subscriptionStripeId);
+            $paymentMethodId = $stripeSubscription->default_payment_method;
+            $paymentMethod = \Stripe\PaymentMethod::retrieve($paymentMethodId);
+            $last4 = $paymentMethod->card->last4 ?? null;
+        } catch (\Exception $e) {
+            Log::error('No se pudo obtener los últimos 4 dígitos de la tarjeta: ' . $e->getMessage());
+            $last4 = null;
+        }
+
+        // Actualizar estado y guardar los últimos 4 dígitos
         $subscription->update([
             'stripe_status' => 'active',
             'start_at' => now(),
             'ends_at' => now()->addMonth(1), // o calcula según tu plan
+            'card_last_four' => $last4,
         ]);
 
         Log::info("Suscripción activada: " . $subscription->stripe_id);
