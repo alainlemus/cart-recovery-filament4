@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Log;
 use Filament\Forms\Components\View;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Support\Facades\URL;
@@ -33,7 +34,7 @@ class AbandonedCheckoutsTable
 {
     public static function configure(Table $table): Table
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $hasMultipleShops = $user && $user->shops()->count() > 1;
 
         return $table
@@ -153,7 +154,7 @@ class AbandonedCheckoutsTable
                                 ? $record->response
                                 : json_decode($record->response, true);
 
-                            $user = auth()->user();
+                            $user = Auth::user();
                             $shop = $user->shops()->first();
                             $token = $shop->access_token;
 
