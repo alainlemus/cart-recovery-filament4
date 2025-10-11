@@ -65,7 +65,7 @@ class ViewSubscriptionPage extends ViewRecord
     public function infolist(Schema $schema): Schema
     {
         $user = Auth::user();
-        $subscription = Subscription::where('user_id', $user->id)->latest()->first();
+        $subscription = Subscription::where('user_id', $user->id)->where('stripe_status', 'active')->latest()->first();
         $product = $subscription?->product()->first();
         $this->name = $user->name;
         $this->email = $user->email;

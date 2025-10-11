@@ -21,7 +21,7 @@ class SubscriptionsTable
             ->paginated(false)
             ->description('Subscriptions associated with your account.')
             ->query(
-                Subscription::query()->where('user_id', Auth::id())
+                Subscription::query()->where('user_id', Auth::id())->where('stripe_status', 'active')
             )
             ->columns([
                 TextColumn::make('product.name')->label('Product Name')->sortable()->searchable(),

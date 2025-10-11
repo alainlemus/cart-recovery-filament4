@@ -22,6 +22,8 @@ class SubscriptionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Cog;
 
+    protected static ?string $navigationLabel = 'Subscription';
+
     public static function form(Schema $schema): Schema
     {
         return SubscriptionForm::configure($schema);
