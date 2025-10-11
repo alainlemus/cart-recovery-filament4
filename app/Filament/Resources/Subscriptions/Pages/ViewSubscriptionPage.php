@@ -4,18 +4,18 @@ namespace App\Filament\Resources\Subscriptions\Pages;
 
 use App\Filament\Resources\Subscriptions\SubscriptionResource;
 use App\Models\Subscription;
-use Filament\Actions\EditAction;
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Filament\Support\Exceptions\Cancel;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rules\Can;
 use Stripe\Stripe;
 use Stripe\Subscription as StripeSubscription;
 use Filament\Notifications\Notification;
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class ViewSubscriptionPage extends ViewRecord
 {
@@ -85,7 +85,18 @@ class ViewSubscriptionPage extends ViewRecord
                         TextInput::make('price')->label('Price')->default($this->price)->disabled(),
                         TextInput::make('next_payment_date')->label('Next Payment Date')->default($this->next_payment_date)->disabled(),
                     ])
-                    ->columns(2),
+                    ->columns(1),
+            ])->columns(1);
+    }
+
+    public function table(Table $table): Table
+    {
+        return $table
+            ->query($this->record->payments())
+            ->columns([
+                TextColumn::make('paid_at')->label('Fecha de Pago')->dateTime('d/m/Y H:i'),
+                TextColumn::make('amount')->label('Monto')->money(fn ($record) => $record->currency),
+                TextColumn::make('stripe_invoice_id')->label('Stripe Invoice ID'),
             ]);
     }
 }
