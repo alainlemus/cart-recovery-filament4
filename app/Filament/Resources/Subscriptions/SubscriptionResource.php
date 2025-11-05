@@ -7,8 +7,10 @@ use App\Filament\Resources\Subscriptions\Pages\EditSubscription;
 use App\Filament\Resources\Subscriptions\Pages\ListSubscriptions;
 use App\Filament\Resources\Subscriptions\Pages\ViewSubscription;
 use App\Filament\Resources\Subscriptions\Pages\ViewSubscriptionPage;
+use App\Filament\Resources\Subscriptions\RelationManagers\PaymentsRelationManager;
 use App\Filament\Resources\Subscriptions\Schemas\SubscriptionForm;
 use App\Filament\Resources\Subscriptions\Tables\SubscriptionsTable;
+use App\Models\Payment;
 use App\Models\Subscription;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -37,7 +39,7 @@ class SubscriptionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PaymentsRelationManager::class,//
         ];
     }
 
