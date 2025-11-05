@@ -14,12 +14,16 @@ class StripeWebhookController extends Controller
         $payload = $request->all();
         $eventType = $payload['type'] ?? null;
 
+        Log::info('Received Stripe webhook: ' . $eventType);
+
         if ($eventType === 'invoice.payment_succeeded') {
             $invoice = $payload['data']['object'];
             $subscriptionId = $invoice['subscription'];
             $amount = $invoice['amount_paid'] / 100;
             $currency = $invoice['currency'];
             $paidAt = now();
+
+            Log::info("Payment succeeded for subscription: " . $subscriptionId);
 
             $subscription = Subscription::where('stripe_id', $subscriptionId)->first();
             if ($subscription) {
@@ -30,6 +34,8 @@ class StripeWebhookController extends Controller
                     'paid_at' => $paidAt,
                     'stripe_invoice_id' => $invoice['id'],
                 ]);
+
+                Log::info("Payment record created for subscription ID: " . $subscription->id);
             }
         }
 
