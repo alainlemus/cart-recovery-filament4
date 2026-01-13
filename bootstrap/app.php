@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens([
             '/webhooks/orders/create',
             '/webhooks/checkouts/create',
+            '/webhooks/stripe',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
