@@ -1,42 +1,21 @@
-<div class="fi-global-search-field">
-    <div x-data="{ open: false }" class="relative">
-        <button @click="open = !open" 
-                @click.away="open = false"
-                type="button" 
-                class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-white/5">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
-            </svg>
-            <span class="hidden sm:inline">{{ config('app.locale_names')[app()->getLocale()] ?? 'Language' }}</span>
-            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-        </button>
+@php
+    $locales = [
+        'es' => ['name' => 'Español', 'flag' => '🇪🇸'],
+        'en' => ['name' => 'English', 'flag' => '🇺🇸'],
+    ];
+    $currentLocale = app()->getLocale();
+@endphp
 
-        <div x-show="open" 
-             x-transition:enter="transition ease-out duration-100" 
-             x-transition:enter-start="transform opacity-0 scale-95" 
-             x-transition:enter-end="transform opacity-100 scale-100" 
-             x-transition:leave="transition ease-in duration-75" 
-             x-transition:leave-start="transform opacity-100 scale-100" 
-             x-transition:leave-end="transform opacity-0 scale-95"
-             class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10"
-             style="display: none;">
-            <div class="py-1">
-                @foreach(config('app.available_locales') as $locale)
-                    <a href="{{ route('locale.change', $locale) }}" 
-                       class="flex items-center gap-3 px-4 py-2 text-sm {{ app()->getLocale() === $locale ? 'bg-gray-50 font-semibold text-gray-950 dark:bg-white/5 dark:text-white' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-white/5' }}">
-                        @if(app()->getLocale() === $locale)
-                            <svg class="h-4 w-4 text-primary-600 dark:text-primary-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                        @else
-                            <span class="w-4"></span>
-                        @endif
-                        {{ config('app.locale_names')[$locale] }}
-                    </a>
-                @endforeach
-            </div>
-        </div>
-    </div>
+<div class="fi-global-search-field flex items-center gap-1">
+    @foreach($locales as $locale => $data)
+        <a href="{{ route('locale.change', $locale) }}" 
+           title="{{ $data['name'] }}"
+           class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200
+                  {{ $currentLocale === $locale 
+                     ? 'bg-primary-600 text-white ring-2 ring-primary-600/20' 
+                     : 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-white/5' }}">
+            <span class="text-base">{{ $data['flag'] }}</span>
+            <span class="hidden lg:inline text-xs">{{ $data['name'] }}</span>
+        </a>
+    @endforeach
 </div>
