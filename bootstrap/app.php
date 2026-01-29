@@ -22,6 +22,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'shopify.subscribed' => \App\Http\Middleware\EnsureShopifySubscriptionActive::class,
         ]);
 
+        $middleware->web(append: [
+            \App\Http\Middleware\SetLocale::class,
+        ]);
+
         // Redirigir al login de Filament cuando no está autenticado
         $middleware->redirectGuestsTo('/admin-shop/login');
     })

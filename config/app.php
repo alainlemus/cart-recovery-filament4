@@ -78,11 +78,28 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'es'),
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Available Locales
+    |--------------------------------------------------------------------------
+    |
+    | List of available locales for the application. Users can switch between
+    | these locales. Add more locales here as needed in the future.
+    |
+    */
+
+    'available_locales' => ['es', 'en'],
+
+    'locale_names' => [
+        'es' => 'Español',
+        'en' => 'English',
+    ],
 
     /*
     |--------------------------------------------------------------------------
