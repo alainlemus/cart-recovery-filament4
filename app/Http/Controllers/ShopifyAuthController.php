@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,30 +16,33 @@ class ShopifyAuthController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             Log::error('No hay usuario autenticado en Shopify auth', [
                 'shop_id' => $shop_id,
-                'context' => 'ShopifyAuthController::auth'
+                'context' => 'ShopifyAuthController::auth',
             ]);
+
             return redirect()->route('filament.admin-shop.auth.login')->with('error', 'Debes estar autenticado.');
         }
 
         $shop = Shop::where('id', $shop_id)->where('user_id', $user->id)->first();
 
-        if (!$shop) {
+        if (! $shop) {
             Log::error('Tienda no encontrada o no pertenece al usuario', [
                 'shop_id' => $shop_id,
                 'user_id' => $user->id,
-                'context' => 'ShopifyAuthController::auth'
+                'context' => 'ShopifyAuthController::auth',
             ]);
+
             return redirect()->route('filament.admin-shop.resources.shops.index')->with('error', 'Tienda no encontrada.');
         }
 
-        if (!empty($shop->access_token)) {
+        if (! empty($shop->access_token)) {
             Log::info('La tienda ya tiene un access_token', [
                 'shop_id' => $shop_id,
-                'context' => 'ShopifyAuthController::auth'
+                'context' => 'ShopifyAuthController::auth',
             ]);
+
             return redirect()->route('filament.admin-shop.resources.shops.index')->with('success', 'La tienda ya está conectada.');
         }
 
@@ -54,7 +58,7 @@ class ShopifyAuthController extends Controller
         $request->session()->put('shopify_domain', $shop->shopify_domain);
 
         // Construir la URL de autorización
-        $auth_url = "https://{$shop->shopify_domain}/admin/oauth/authorize?" . http_build_query([
+        $auth_url = "https://{$shop->shopify_domain}/admin/oauth/authorize?".http_build_query([
             'client_id' => $api_key,
             'scope' => $scopes,
             'redirect_uri' => $redirect_uri,
@@ -67,13 +71,14 @@ class ShopifyAuthController extends Controller
             'redirect_uri' => $redirect_uri,
             'shopify_domain' => $shop->shopify_domain,
             'auth_url' => $auth_url,
-            'context' => 'ShopifyAuthController::auth'
+            'context' => 'ShopifyAuthController::auth',
         ]);
 
         if (filter_var($auth_url, FILTER_VALIDATE_URL)) {
             return redirect()->away($auth_url); // usa away para URLs externas
         } else {
             Log::error('URL de Shopify inválida', ['auth_url' => $auth_url]);
+
             return redirect()->route('filament.admin-shop.resources.shops.index')
                 ->with('error', 'URL de Shopify inválida.');
         }
@@ -90,26 +95,29 @@ class ShopifyAuthController extends Controller
             'state' => $state,
             'stored_state' => $stored_state,
             'shop_id' => $shop_id,
-            'context' => 'ShopifyAuthController::callback'
+            'context' => 'ShopifyAuthController::callback',
         ]);
 
         // Validar el state para prevenir CSRF
-        if (!$state || $state !== $stored_state) {
+        if (! $state || $state !== $stored_state) {
             Log::error('Estado inválido en el callback de Shopify', [
                 'state' => $state,
                 'stored_state' => $stored_state,
-                'context' => 'ShopifyAuthController::callback'
+                'context' => 'ShopifyAuthController::callback',
             ]);
-            //return redirect()->route('filament.admin-shop.resources.shops.index')->with('error', 'Error de seguridad: estado inválido.');
+
+            return redirect()->route('shopify.billing.plans')
+                ->with('error', 'Security error: Invalid state. Please try again.');
         }
 
         $shop = Shop::find($shop_id);
 
-        if (!$shop) {
+        if (! $shop) {
             Log::error('Tienda no encontrada en el callback', [
                 'shop_id' => $shop_id,
-                'context' => 'ShopifyAuthController::callback'
+                'context' => 'ShopifyAuthController::callback',
             ]);
+
             return redirect()->route('filament.admin-shop.resources.shops.index')->with('error', 'Tienda no encontrada.');
         }
 
@@ -123,21 +131,23 @@ class ShopifyAuthController extends Controller
         if ($response->failed()) {
             Log::error('Error al obtener el access_token de Shopify', [
                 'shop_id' => $shop_id,
-                'response' => $response,
-                'context' => 'ShopifyAuthController::callback'
+                'response' => $response->json(),
+                'context' => 'ShopifyAuthController::callback',
             ]);
+
             return redirect()->route('filament.admin-shop.resources.shops.index')->with('error', 'Error al conectar con Shopify.');
         }
 
         $data = $response->json();
         $access_token = $data['access_token'] ?? null;
 
-        if (!$access_token) {
+        if (! $access_token) {
             Log::error('No se recibió access_token en el callback', [
                 'shop_id' => $shop_id,
                 'response' => $data,
-                'context' => 'ShopifyAuthController::callback'
+                'context' => 'ShopifyAuthController::callback',
             ]);
+
             return redirect()->route('filament.admin-shop.resources.shops.index')->with('error', 'No se pudo obtener el token de acceso.');
         }
 
@@ -146,11 +156,33 @@ class ShopifyAuthController extends Controller
 
         Log::info('Access_token guardado exitosamente', [
             'shop_id' => $shop_id,
-            'context' => 'ShopifyAuthController::callback'
+            'context' => 'ShopifyAuthController::callback',
         ]);
 
         // Limpiar la sesión
         $request->session()->forget(['shopify_state', 'shop_id']);
+
+        // Check if this is part of a registration flow
+        $isRegistrationFlow = session('registration_completed', false);
+        $intendedProductId = session('intended_subscription_product_id');
+
+        if ($isRegistrationFlow && $intendedProductId) {
+            // Clear registration session data
+            session()->forget(['registration_completed', 'intended_subscription_product_id']);
+
+            // Automatically initiate subscription
+            $product = Product::find($intendedProductId);
+
+            if ($product) {
+                Log::info('Auto-initiating subscription after registration', [
+                    'shop_id' => $shop->id,
+                    'product_id' => $product->id,
+                ]);
+
+                return redirect()->route('shopify.billing.subscribe', ['product' => $product->id])
+                    ->with('success', 'Store connected! Now completing your subscription...');
+            }
+        }
 
         return redirect()->route('filament.admin-shop.resources.shops.index')->with('success', 'Tienda conectada con Shopify exitosamente.');
     }

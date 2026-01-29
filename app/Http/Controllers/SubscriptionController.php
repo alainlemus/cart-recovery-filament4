@@ -11,21 +11,21 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Stripe\Stripe;
-use Stripe\Customer;
 use Stripe\Checkout\Session;
+use Stripe\Customer;
+use Stripe\Stripe;
 
 class SubscriptionController extends Controller
 {
-
     public function __construct()
     {
-        //$this->middleware('auth');
+        // $this->middleware('auth');
     }
 
     public function create($planId)
     {
         $infoPlan = Product::find($planId);
+
         return view('subscription.create', ['infoProduct' => $infoPlan]);
     }
 
@@ -33,20 +33,20 @@ class SubscriptionController extends Controller
     {
         // Validar datos
         $data = $request->validate([
-            'name'  => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         // Crear usuario si no existe
         $user = User::create([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
+            'name' => $data['name'],
+            'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'role'     => 'admin',
+            'role' => 'admin',
         ]);
 
-        Log::info("Usuario creado: " . $user->email);
+        Log::info('Usuario creado: '.$user->email);
 
         Auth::login($user);
 
@@ -73,7 +73,7 @@ class SubscriptionController extends Controller
                     'quantity' => 1,
                 ]],
                 'mode' => 'subscription',
-                'success_url' => route('subscription.success', ['user' => $user->id]). '&session_id={CHECKOUT_SESSION_ID}',
+                'success_url' => route('subscription.success', ['user' => $user->id]).'&session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => route('subscription.create', ['plan' => $plan->id]),
             ]);
 
@@ -107,7 +107,7 @@ class SubscriptionController extends Controller
 
     public function success(Request $request)
     {
-        Log::info("Respuesta de registro de suscripcion en STRIPE: " . $request);
+        Log::info('Respuesta de registro de suscripcion en STRIPE: '.$request);
 
         $user = Auth::user();
         $stripeSessionId = $request->query('session_id');
@@ -125,7 +125,7 @@ class SubscriptionController extends Controller
             $paymentMethod = \Stripe\PaymentMethod::retrieve($paymentMethodId);
             $last4 = $paymentMethod->card->last4 ?? null;
         } catch (\Exception $e) {
-            Log::error('No se pudo obtener los últimos 4 dígitos de la tarjeta: ' . $e->getMessage());
+            Log::error('No se pudo obtener los últimos 4 dígitos de la tarjeta: '.$e->getMessage());
             $last4 = null;
         }
 
@@ -137,11 +137,10 @@ class SubscriptionController extends Controller
             'card_last_four' => $last4,
         ]);
 
-        Log::info("Suscripción activada: " . $subscription->stripe_id);
+        Log::info('Suscripción activada: '.$subscription->stripe_id);
 
         // Redirigir al panel de Filament
-        return redirect()->to(env('APP_URL').'/admin-shop')
+        return redirect()->route('filament.admin-shop.pages.dashboard')
             ->with('success', '¡Suscripción activada! Bienvenido a tu panel.');
     }
-
 }

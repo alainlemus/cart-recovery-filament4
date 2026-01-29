@@ -685,3 +685,128 @@ $pages->assertNoJavascriptErrors()->assertNoConsoleLogs();
 - Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
 - Run the minimum number of tests needed to ensure code quality and speed. Use `php artisan test` with a specific filename or filter.
 </laravel-boost-guidelines>
+
+
+## Cart Recovery Application - Project Specific
+
+### Application Overview
+This is a Shopify cart recovery SaaS application that:
+- Integrates with Shopify stores via OAuth
+- Tracks abandoned checkouts through webhooks
+- Sends recovery messages via email and WhatsApp
+- Manages Shopify app subscriptions via Stripe (Cashier)
+- Provides a Filament admin panel for shops to manage their abandoned carts
+
+### Architecture & Key Concepts
+
+#### Multi-Panel Filament Structure
+- **Admin Panel** (`app/Filament/Admin/Resources/`) - Platform administrator view for managing all shops, users, and payments
+- **Shop Panel** (`app/Filament/Resources/`) - Individual shop owner view for managing their abandoned carts, coupons, and subscriptions
+- When creating Filament resources, determine which panel they belong to first
+
+#### Service Layer Pattern
+- Business logic for external services lives in `app/services/`:
+  - `ShopifyBillingService` - Manages Shopify app charges/subscriptions
+  - `ShopifyDiscountService` - Creates discount codes in Shopify
+  - `TwilioWhatsAppService` - Sends WhatsApp messages via Twilio
+- Use these services rather than HTTP calls directly in controllers
+
+#### Cart Recovery Flow
+1. Shopify sends abandoned checkout webhook → stored in `carts` table
+2. Cart gets a unique `recovery_token` for tracking
+3. Recovery emails/WhatsApp messages include token-based URLs
+4. When clicked, `CartRecoveryController::recover()` logs the interaction
+5. User is redirected to Shopify checkout with updated note
+6. Shopify order webhook marks cart as recovered
+
+#### Database Relationships
+- `Shop` has many `Cart`, `Subscription`, `Product`, `Coupon`
+- `Cart` belongs to `Shop` and `User`
+- `Subscription` has many `SubscriptionItem`
+- Key tracking fields on `Cart`: `clicked_at`, `recovered_at`, `recovered_via`, `status`
+
+### Integration Points
+
+#### Shopify
+- OAuth flow: `ShopifyAuthController` handles installation
+- API version configured in `config/services.php` (currently 2025-07)
+- Webhook handlers in `ShopifyWebhookController` and `ShopifyBillingWebhookController`
+- Store domain in `shops.shopify_domain`, token in `shops.access_token`
+
+#### Stripe (via Cashier)
+- Handles app subscription billing (not Shopify billing)
+- Webhook handler: `StripeWebhookController`
+- Plans defined in subscription routes: `/subscription/create/{plan}`
+
+#### Twilio WhatsApp
+- Configured via `services.twilio` config
+- Messages sent through `TwilioWhatsAppService::sendMessage()`
+- Sender number: `TWILIO_WHATSAPP_NUMBER`
+
+### Environment Setup
+Required environment variables:
+```
+SHOPIFY_API_KEY
+SHOPIFY_API_SECRET
+SHOPIFY_REDIRECT_URI
+SHOPIFY_SCOPES
+SHOPIFY_WEBHOOK_SECRET
+SHOPIFY_API_VERSION
+
+STRIPE_KEY
+STRIPE_SECRET
+
+TWILIO_SID
+TWILIO_TOKEN
+TWILIO_WHATSAPP_NUMBER
+```
+
+### Development Workflow
+
+#### Running the Application
+- Full dev environment: `composer run dev` (starts server, queue, logs, and vite concurrently)
+- Individual services:
+  - Server: `php artisan serve`
+  - Queue: `php artisan queue:listen --tries=1`
+  - Logs: `php artisan pail --timeout=0`
+  - Assets: `npm run dev`
+
+#### Testing Webhooks Locally
+- Use ngrok or Herd's share feature to expose local development
+- Register webhook URLs in Shopify partner dashboard
+- Check webhook logs with `php artisan pail`
+
+### Common Patterns
+
+#### Creating Recovery Tokens
+```php
+$cart->recovery_token = Str::random(32);
+$recoveryUrl = route('cart.recover', ['token' => $cart->recovery_token]);
+```
+
+#### Service Usage
+```php
+// Shopify billing
+$service = new ShopifyBillingService($shop);
+$charge = $service->createRecurringCharge('Premium Plan', 29.99, $returnUrl);
+
+// Discount codes
+$discountService = new ShopifyDiscountService($shop->shopify_domain, $shop->access_token);
+$discount = $discountService->createDiscountCode('RECOVER', 10.0);
+
+// WhatsApp
+TwilioWhatsAppService::sendMessage($phoneNumber, $message);
+```
+
+#### Filament Resource Conventions
+- Use relationships: `->relationship('shop', 'name')` for selects
+- Cart status uses custom enum/states: 'abandoned', 'complete'
+- Follow existing resource file structure for consistency
+
+### Gotchas & Known Issues
+
+- Cart recovery links include `?via=email` or `?via=whatsapp` to track recovery channel
+- Shopify checkout notes are updated to include recovery_token for tracking
+- When modifying Shopify API calls, verify API version compatibility
+- Queue must be running for background jobs (webhook processing, email sending)
+- Use SQLite in development, configured in `.env`

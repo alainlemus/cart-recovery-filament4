@@ -47,12 +47,14 @@ return [
         'redirect_uri' => env('SHOPIFY_REDIRECT_URI'),
         'scopes' => env('SHOPIFY_SCOPES', 'read_products,write_products,read_orders,write_orders,read_checkouts,write_checkouts'),
         'webhook_secret' => env('SHOPIFY_WEBHOOK_SECRET'),
+        'test_charges' => env('SHOPIFY_TEST_CHARGES', false),
+        'trial_days' => env('SHOPIFY_TRIAL_DAYS', 7),
     ],
 
     'cashier' => [
         'webhook' => [
             'secret' => env('STRIPE_WEBHOOK_SECRET'),
-            //'tolerance' => env('STRIPE_WEBHOOK_TOLERANCE', 300),
+            // 'tolerance' => env('STRIPE_WEBHOOK_TOLERANCE', 300),
         ],
     ],
 

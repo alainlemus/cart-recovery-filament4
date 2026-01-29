@@ -5,17 +5,17 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Cashier\Billable;
-use Filament\Panel;
 
 class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, Billable;
+    use Billable, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -66,15 +66,33 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        //dd($this->role, $panel->getId());
         // Panel admin (solo super-admin)
         if ($panel->getId() === 'admin') {
             return $this->role === 'super-admin';
         }
 
-        // Panel admin-shop (solo admin o user)
+        // Panel admin-shop (solo admin o user con suscripción activa)
         if ($panel->getId() === 'admin-shop') {
-            return in_array($this->role, ['admin', 'user']) && $this->subscriptions()->where('stripe_status', 'active')->exists();
+            if (! in_array($this->role, ['admin', 'user'])) {
+                return false;
+            }
+
+            // Check for Stripe subscription
+            $hasStripeSubscription = $this->subscriptions()
+                ->where('stripe_status', 'active')
+                ->exists();
+
+            if ($hasStripeSubscription) {
+                return true;
+            }
+
+            // Check for Shopify subscription
+            $shop = $this->shops()->first();
+            if ($shop && $shop->hasActiveShopifySubscription()) {
+                return true;
+            }
+
+            return false;
         }
 
         // Otros paneles o default
