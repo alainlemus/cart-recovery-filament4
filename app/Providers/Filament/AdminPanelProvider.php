@@ -27,7 +27,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->id('admin')
             ->path('admin')
-            //->registration()
+            // ->registration()
             ->passwordReset()
             ->emailVerification()
             ->emailChangeVerification()
@@ -37,7 +37,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Slate,
             ])
-             ->brandLogo(fn () => view('filament.admin.logo'))
+            ->brandLogo(fn () => view('filament.admin.logo'))
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\Filament\Admin\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\Filament\Admin\Pages')
             ->pages([

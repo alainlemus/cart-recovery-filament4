@@ -23,18 +23,38 @@ return [
     'password_confirmation' => 'Confirm Password',
     'remember_me' => 'Remember Me',
     'forgot_password' => 'Forgot your password?',
-    
+
+    // Authentication
+    'auth' => [
+        'register_success' => 'Account created! Now connect your Shopify store.',
+        'must_be_authenticated' => 'You must be authenticated.',
+        'invalid_state' => 'Security error: Invalid state. Please try again.',
+        'create_account_subscribe' => 'Please create an account to subscribe.',
+        'store_connected_subscription' => 'Store connected! Now completing your subscription...',
+        'shop_connected_success' => 'Store connected with Shopify successfully.',
+    ],
+
+    // Errors
+    'errors' => [
+        'shop_not_found' => 'Shop not found.',
+        'shop_already_connected' => 'The shop is already connected.',
+        'shopify_connection_error' => 'Error connecting to Shopify.',
+        'no_access_token' => 'Could not obtain access token.',
+        'create_shop_first' => 'You need to create a shop first.',
+        'connect_store_first' => 'Please connect your Shopify store first.',
+    ],
+
     // Shopify
     'shopify' => [
         'plans' => [
             'title' => 'Choose Your Plan',
-            'subtitle' => 'Select the plan that best fits your business needs',
+            'subtitle' => 'Select the plan that best suits your business needs',
             'per_month' => '/month',
             'get_started' => 'Get Started',
             'current_plan' => 'Current Plan',
             'subscribe_now' => 'Subscribe Now',
             'cancel_current_first' => 'Cancel current plan first',
-            'login_to_subscribe' => 'Login to Subscribe',
+            'login_to_subscribe' => 'Login to subscribe',
             'already_account' => 'Already have an account?',
             'login_here' => 'Login here',
             'connect_store_first' => 'Connect your Shopify store first',
@@ -48,54 +68,53 @@ return [
             'status' => 'Status',
             'active' => 'Active',
             'trial_ends' => 'Trial ends',
-            'price' => 'Price',
-            'next_billing' => 'Next billing',
-            'sync_status' => 'Sync Status',
-            'cancel_subscription' => 'Cancel Subscription',
-            'confirm_cancel' => 'Are you sure you want to cancel your subscription?',
+            'manage_subscription' => 'Manage Subscription',
+            'on_trial' => 'On Trial Period',
+            'not_subscribed' => 'You are not subscribed to any plan',
+            'current_subscription' => 'Your Current Subscription',
         ],
         'register' => [
             'title' => 'Create Your Account',
             'subtitle' => 'Subscribe to',
             'full_name' => 'Full Name',
             'email_address' => 'Email Address',
-            'shopify_domain' => 'Shopify Store Domain',
-            'shopify_domain_placeholder' => 'yourstore.myshopify.com',
-            'shopify_domain_help' => 'Enter your Shopify store URL (e.g., yourstore.myshopify.com)',
+            'shopify_domain' => 'Shopify Domain',
+            'shopify_domain_placeholder' => 'your-store.myshopify.com',
+            'shopify_domain_help' => 'Enter your full Shopify domain (e.g., your-store.myshopify.com)',
             'password' => 'Password',
             'confirm_password' => 'Confirm Password',
-            'create_account' => 'Create Account & Connect Store',
+            'create_account' => 'Create Account and Continue',
             'already_account' => 'Already have an account?',
-            'back_to_plans' => 'Back to plans',
+            'back_to_plans' => 'Back to Plans',
             'what_happens_next' => 'What happens next?',
             'steps' => [
-                'create_account' => 'Create your account',
-                'connect_store' => 'Connect your Shopify store (OAuth)',
-                'approve_charge' => 'Approve the subscription charge',
-                'start_recovering' => 'Start recovering abandoned carts!',
+                'create_account' => 'We create your account',
+                'connect_store' => 'We connect you to your Shopify store',
+                'approve_charge' => 'You approve the charge in Shopify',
+                'start_recovering' => 'You start recovering abandoned carts!',
             ],
         ],
     ],
 
-    // Subscription messages
+    // Subscriptions
     'subscription' => [
-        'activated' => 'Subscription activated successfully! Welcome to your dashboard.',
-        'cancelled' => 'Subscription cancelled successfully.',
-        'updated' => 'Subscription updated successfully.',
-        'error' => 'There was a problem processing your subscription. Please try again.',
-        'already_active' => 'You already have an active subscription.',
-        'no_active' => 'You don\'t have an active subscription.',
-        'select_plan' => 'Please select a plan to continue.',
+        'error' => 'Failed to create subscription. Please try again.',
+        'already_active' => 'You already have an active subscription. Please cancel it first to change plans.',
+        'declined' => 'Subscription was declined or cancelled.',
+        'process_error' => 'Failed to process subscription. Please try again.',
+        'verification_error' => 'Failed to verify subscription status.',
+        'activated' => 'Subscription activated successfully! Welcome to :product.',
+        'already_active_status' => 'Subscription is already active! Welcome to :product.',
+        'not_approved' => 'Subscription was not approved. Status: :status',
+        'pending_activation' => 'Subscription is pending activation. Please refresh the page.',
+        'stripe_error' => 'There was a problem processing your subscription. Please try again.',
+        'stripe_activated' => 'Subscription activated! Welcome to your dashboard.',
     ],
 
-    // Auth messages
-    'auth' => [
-        'failed' => 'These credentials do not match our records.',
-        'password' => 'The provided password is incorrect.',
-        'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-        'logout_success' => 'Logged out successfully.',
-        'login_success' => 'Welcome back!',
-        'register_success' => 'Account created successfully!',
-        'must_be_authenticated' => 'You must be authenticated.',
+    // Language Selector
+    'language' => [
+        'select' => 'Select Language',
+        'spanish' => 'Español',
+        'english' => 'English',
     ],
 ];

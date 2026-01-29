@@ -172,114 +172,114 @@ class AbandonedCheckoutsTable
                         ]);
                     })
                     ->steps([
-                    Step::make('Data cart')
-                        ->description('Checkout details')
-                        ->schema([
-                            TextInput::make('phone_number')
-                                ->label('Phone number')
-                                ->readOnly()
-                                ->visible(function ($get) {
-                                    // Validar si phone_number no es null ni vacío
-                                    return ! is_null($get('phone_number')) && ! empty($get('phone_number'));
-                                })
-                                ->dehydrated(false),
+                        Step::make('Data cart')
+                            ->description('Checkout details')
+                            ->schema([
+                                TextInput::make('phone_number')
+                                    ->label('Phone number')
+                                    ->readOnly()
+                                    ->visible(function ($get) {
+                                        // Validar si phone_number no es null ni vacío
+                                        return ! is_null($get('phone_number')) && ! empty($get('phone_number'));
+                                    })
+                                    ->dehydrated(false),
 
-                            TextInput::make('email')
-                                ->label('Email')
-                                ->readOnly()
-                                ->dehydrated(false),
+                                TextInput::make('email')
+                                    ->label('Email')
+                                    ->readOnly()
+                                    ->dehydrated(false),
 
-                            TextInput::make('currency')
-                                ->label('Currency')
-                                ->readOnly()
-                                ->dehydrated(false),
+                                TextInput::make('currency')
+                                    ->label('Currency')
+                                    ->readOnly()
+                                    ->dehydrated(false),
 
-                            TextInput::make('total_price')
-                                ->label('Total Price')
-                                ->readOnly()
-                                ->dehydrated(false),
-                        ]),
-
-                    Step::make('Message')
-                        ->description('Add some message')
-                        ->schema([
-                                MarkdownEditor::make('description')
-                                ->label('Message to customer')
-                                // ->default("Hey there! Your cart is packed with awesome finds! Don't let them slip away—complete your purchase now and score these amazing deals! 🚀 Let's make it happen!")
-                                ->required()
-                                ->columnSpanFull()
-                                ->toolbarButtons([
-                                    ['bold', 'italic', 'strike'],
-                                    ['heading'],
-                                    ['blockquote', 'codeBlock', 'bulletList', 'orderedList'],
-                                    ['undo', 'redo'],
-                                ])
-                                ->afterStateHydrated(function ($component, $state) {
-                                    if (blank($state)) {
-                                        $component->state("Hey there! Your cart is packed with awesome finds! Don't let them slip away—complete your purchase now and score these amazing deals! 🚀 Let's make it happen!");
-                                    }
-                                }),
+                                TextInput::make('total_price')
+                                    ->label('Total Price')
+                                    ->readOnly()
+                                    ->dehydrated(false),
                             ]),
 
-                    Step::make('Create Discount Code')
-                        ->description('Create a discount code for this customer')
-                        ->schema([
+                        Step::make('Message')
+                            ->description('Add some message')
+                            ->schema([
+                                MarkdownEditor::make('description')
+                                    ->label('Message to customer')
+                                // ->default("Hey there! Your cart is packed with awesome finds! Don't let them slip away—complete your purchase now and score these amazing deals! 🚀 Let's make it happen!")
+                                    ->required()
+                                    ->columnSpanFull()
+                                    ->toolbarButtons([
+                                        ['bold', 'italic', 'strike'],
+                                        ['heading'],
+                                        ['blockquote', 'codeBlock', 'bulletList', 'orderedList'],
+                                        ['undo', 'redo'],
+                                    ])
+                                    ->afterStateHydrated(function ($component, $state) {
+                                        if (blank($state)) {
+                                            $component->state("Hey there! Your cart is packed with awesome finds! Don't let them slip away—complete your purchase now and score these amazing deals! 🚀 Let's make it happen!");
+                                        }
+                                    }),
+                            ]),
+
+                        Step::make('Create Discount Code')
+                            ->description('Create a discount code for this customer')
+                            ->schema([
                                 Toggle::make('create_discount')
-                                ->label('Create Discount Code?')
-                                ->default(false)
-                                ->reactive(),
+                                    ->label('Create Discount Code?')
+                                    ->default(false)
+                                    ->reactive(),
 
                                 TextInput::make('discount_value')
-                                ->label('Discount %')
-                                ->numeric()
-                                ->minValue(1)
-                                ->maxValue(100)
-                                ->suffix('%')
-                                ->visible(fn ($get) => $get('create_discount'))
-                                ->required(fn ($get) => $get('create_discount')),
+                                    ->label('Discount %')
+                                    ->numeric()
+                                    ->minValue(1)
+                                    ->maxValue(100)
+                                    ->suffix('%')
+                                    ->visible(fn ($get) => $get('create_discount'))
+                                    ->required(fn ($get) => $get('create_discount')),
 
                                 TextInput::make('discount_code')
-                                ->label('Discount code')
-                                ->required(fn ($get) => $get('create_discount'))
-                                ->visible(fn ($get) => $get('create_discount'))
-                                ->afterStateUpdated(function ($component, $state, $get) {
-                                    if ($get('create_discount')) {
-                                        $service = new ShopifyDiscountService(
-                                            $get('shop_domain'),
-                                            $get('access_token')
-                                        );
-                                        $value = $get('discount_value') ?? 10;
-                                        $prefix = $get('discount_code') ?? 'CART';
-                                        $couponData = $service->createDiscountCode($prefix, $value);
-
-                                        if (is_array($couponData)) {
-                                            // Guardar o actualizar el cupón en la base de datos
-                                            \App\Models\Coupon::updateOrCreate(
-                                                ['code' => $couponData['code']],
-                                                $couponData
+                                    ->label('Discount code')
+                                    ->required(fn ($get) => $get('create_discount'))
+                                    ->visible(fn ($get) => $get('create_discount'))
+                                    ->afterStateUpdated(function ($component, $state, $get) {
+                                        if ($get('create_discount')) {
+                                            $service = new ShopifyDiscountService(
+                                                $get('shop_domain'),
+                                                $get('access_token')
                                             );
-                                            $component->state($couponData['code']);
-                                        } else {
-                                            $component->state('Error generating coupon');
+                                            $value = $get('discount_value') ?? 10;
+                                            $prefix = $get('discount_code') ?? 'CART';
+                                            $couponData = $service->createDiscountCode($prefix, $value);
+
+                                            if (is_array($couponData)) {
+                                                // Guardar o actualizar el cupón en la base de datos
+                                                \App\Models\Coupon::updateOrCreate(
+                                                    ['code' => $couponData['code']],
+                                                    $couponData
+                                                );
+                                                $component->state($couponData['code']);
+                                            } else {
+                                                $component->state('Error generating coupon');
+                                            }
                                         }
-                                    }
-                                }),
+                                    }),
                             ]),
 
-                    Step::make('See before sending')
-                        ->description('See the mesage to verify')
-                        ->schema([
+                        Step::make('See before sending')
+                            ->description('See the mesage to verify')
+                            ->schema([
                                 TextEntry::make('to')
-                                ->label('📧 To')
-                                ->state(fn ($get) => $get('email')),
+                                    ->label('📧 To')
+                                    ->state(fn ($get) => $get('email')),
 
                                 TextEntry::make('subject')
-                                ->label('📝 Subject')
-                                ->state(fn () => 'Don’t miss out — your cart is ready to checkout!'),
+                                    ->label('📝 Subject')
+                                    ->state(fn () => 'Don’t miss out — your cart is ready to checkout!'),
 
                                 TextEntry::make('subject')
-                                ->label('📝 Subject')
-                                ->state(fn ($get) => $get('description')),
+                                    ->label('📝 Subject')
+                                    ->state(fn ($get) => $get('description')),
 
                             ]),
                     ])->action(function ($data, $record) {
@@ -349,9 +349,9 @@ class AbandonedCheckoutsTable
                     ->requiresConfirmation(),
             ])
             ->toolbarActions([
-                                BulkActionGroup::make([
-                                    DeleteBulkAction::make(),
-                                ]),
-                            ]);
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 }

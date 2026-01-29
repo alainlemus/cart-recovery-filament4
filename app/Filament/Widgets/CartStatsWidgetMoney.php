@@ -27,8 +27,8 @@ class CartStatsWidgetMoney extends StatsOverviewWidget
             ->sum('total_price');
 
         return [
-            Stat::make('Recovered Amount', '$' . number_format($recovered, 2)),
-            Stat::make('Amount to Recover', '$' . number_format($toRecover, 2)),
+            Stat::make('Recovered Amount', '$'.number_format($recovered, 2)),
+            Stat::make('Amount to Recover', '$'.number_format($toRecover, 2)),
         ];
     }
 }

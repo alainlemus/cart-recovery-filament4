@@ -5,14 +5,16 @@ namespace App\Filament\Widgets;
 use App\Models\Cart;
 use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
-use Filament\Widgets\Filter;
 use Illuminate\Support\Facades\Auth;
 
 class CartRecoveryChart extends ChartWidget
 {
     protected ?string $heading = 'Cart Recovery Chart';
+
     protected ?string $pollingInterval = '10s';
+
     protected ?string $maxHeight = '400px';
+
     protected ?string $maxWidth = null; // Puedes agregar esta propiedad si tu ChartWidget la soporta
 
     public function getDescription(): ?string
@@ -25,7 +27,7 @@ class CartRecoveryChart extends ChartWidget
         $user = Auth::user();
         $shops = [];
         foreach ($user->shops as $shop) {
-            $shops[(string)$shop->id] = (string)$shop->name;
+            $shops[(string) $shop->id] = (string) $shop->name;
         }
         $options = array_merge([0 => 'Todas las tiendas'], $shops);
 
@@ -70,7 +72,7 @@ class CartRecoveryChart extends ChartWidget
         }
 
         logger()->info('Valor de selectedShop', ['selectedShop' => $selectedShop]);
-        $labels = $months->map(fn($m) => (string) Carbon::createFromFormat('Y-m', $m)->format('M Y'))->values()->all();
+        $labels = $months->map(fn ($m) => (string) Carbon::createFromFormat('Y-m', $m)->format('M Y'))->values()->all();
         $dataReturn = [
             'datasets' => [
                 [
@@ -87,6 +89,7 @@ class CartRecoveryChart extends ChartWidget
             'labels' => $labels,
         ];
         logger()->info('getData return', ['data' => $dataReturn]);
+
         return $dataReturn;
     }
 

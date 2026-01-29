@@ -16,8 +16,9 @@ class ShopifyWebhookController extends Controller
         $data = $request->getContent();
         $calculatedHmac = base64_encode(hash_hmac('sha256', $data, config('services.shopify.api_secret'), true));
 
-        if (!hash_equals($hmacHeader, $calculatedHmac)) {
+        if (! hash_equals($hmacHeader, $calculatedHmac)) {
             Log::warning('Shopify webhook signature mismatch');
+
             return response('Unauthorized', 401);
         }
 
@@ -26,20 +27,21 @@ class ShopifyWebhookController extends Controller
 
         if (isset($payload['id']) && $payload['id'] === 'exampleOrderId') {
             Log::info('Se recibió una orden de prueba, no se procesa', ['response' => $payload]);
+
             return response('Test order received', 200);
         }
 
         // Buscar por checkout_id o recovery_token en note
         $cart = null;
-        if (!empty($payload['note']) && str_starts_with($payload['note'], 'recovery_token:')) {
+        if (! empty($payload['note']) && str_starts_with($payload['note'], 'recovery_token:')) {
             $token = str_replace('recovery_token:', '', $payload['note']);
             $cart = Cart::where('recovery_token', $token)->first();
         }
 
-        if (!$cart) {
-        $cart = Cart::where('shopify_id', $payload['checkout_id'] ?? null)
-            ->orWhere('id_cart', $payload['checkout_id'] ?? null)
-            ->first();
+        if (! $cart) {
+            $cart = Cart::where('shopify_id', $payload['checkout_id'] ?? null)
+                ->orWhere('id_cart', $payload['checkout_id'] ?? null)
+                ->first();
         }
 
         if ($cart) {
@@ -62,8 +64,9 @@ class ShopifyWebhookController extends Controller
             'calculatedHmac' => $calculatedHmac,
             'data' => $data,
         ]);
-        if (!hash_equals($hmacHeader, $calculatedHmac)) {
+        if (! hash_equals($hmacHeader, $calculatedHmac)) {
             Log::warning('Shopify webhook signature mismatch');
+
             return response('Unauthorized', 401);
         }
 
@@ -72,6 +75,7 @@ class ShopifyWebhookController extends Controller
 
         if (isset($payload['id']) && $payload['id'] === 'exampleCartId') {
             Log::info('Se recibió un carrito de prueba, no se guarda en BD', ['response' => $payload]);
+
             return response('Test cart received', 200);
         }
 

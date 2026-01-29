@@ -18,7 +18,7 @@ class CartRecoveryController extends Controller
             'via method' => $request->query('via', 'unknown'),
         ]);
 
-        if (!$cart->clicked_at) {
+        if (! $cart->clicked_at) {
             $cart->clicked_at = now();
             $cart->recovered_via = $request->query('via', 'unknown'); // Puedes pasar ?via=email o ?via=whatsapp
             $cart->save();
@@ -30,7 +30,7 @@ class CartRecoveryController extends Controller
                 'X-Shopify-Access-Token' => $cart->shop->access_token,
             ])->put("https://{$cart->shop->shopify_domain}/admin/api/".config('services.shopify.api_version')."/checkouts/{$cart->shopify_id}.json", [
                 'checkout' => [
-                    'note' => 'recovery_token:' . $cart->recovery_token,
+                    'note' => 'recovery_token:'.$cart->recovery_token,
                 ],
             ]);
         }

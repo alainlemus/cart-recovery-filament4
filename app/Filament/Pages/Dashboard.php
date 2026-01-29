@@ -2,12 +2,11 @@
 
 namespace App\Filament\Pages;
 
+use Filament\Forms\Components\Select;
 use Filament\Pages\Dashboard as BaseDashboard;
 use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Select;
 use Illuminate\Support\Facades\Auth;
 
 class Dashboard extends BaseDashboard
@@ -33,5 +32,4 @@ class Dashboard extends BaseDashboard
                     ->columns(3),
             ]);
     }
-
 }

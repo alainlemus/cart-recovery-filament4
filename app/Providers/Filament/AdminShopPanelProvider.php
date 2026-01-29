@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\Auth\Login;
 use App\Filament\Widgets\CartRecoveryChart;
 use App\Filament\Widgets\CartStatsWidget;
 use App\Filament\Widgets\CartStatsWidgetMoney;

@@ -7,9 +7,9 @@ use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ShopsTable
 {
@@ -53,10 +53,10 @@ class ShopsTable
                     ->color('primary')
                     ->disabled(function ($record) {
                         // Deshabilitar si ya tiene un access_token
-                        return !empty($record->access_token);
+                        return ! empty($record->access_token);
                     })
                     ->tooltip(function ($record) {
-                        return !empty($record->access_token) ? 'The store is now connected to Shopify.' : 'Connect your store with Shopify.';
+                        return ! empty($record->access_token) ? 'The store is now connected to Shopify.' : 'Connect your store with Shopify.';
                     }),
             ])
             ->toolbarActions([

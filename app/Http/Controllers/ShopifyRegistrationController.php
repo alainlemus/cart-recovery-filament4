@@ -94,7 +94,7 @@ class ShopifyRegistrationController extends Controller
 
             // Redirect to OAuth flow
             return redirect()->route('shopify.auth', ['shop_id' => $shop->id])
-                ->with('success', 'Account created! Now connect your Shopify store.');
+                ->with('success', __('messages.auth.register_success'));
         } catch (\Exception $e) {
             Log::error('Shopify registration failed', [
                 'error' => $e->getMessage(),
@@ -103,7 +103,7 @@ class ShopifyRegistrationController extends Controller
 
             return redirect()->back()
                 ->withInput($request->except('password', 'password_confirmation'))
-                ->with('error', 'Registration failed. Please try again.');
+                ->with('error', __('messages.subscription.error'));
         }
     }
 }

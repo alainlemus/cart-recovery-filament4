@@ -56,9 +56,9 @@ class CouponsTable
                 //
             ])
             ->recordActions([
-                //EditAction::make(),
+                // EditAction::make(),
                 DeleteAction::make()
-                    ->before(function($record) {
+                    ->before(function ($record) {
                         $shop = Shop::find($record->shop_id);
                         $response = is_array($record->response) ? $record->response : json_decode($record->response, true);
 
@@ -75,7 +75,7 @@ class CouponsTable
                                 // 2. Verificar si ya no quedan más discount codes en esa price rule
                                 $codesResponse = Http::withHeaders([
                                     'X-Shopify-Access-Token' => $shop->access_token,
-                                ])->get("https://{$shop->shopify_domain}/admin/api/" . config('services.shopify.api_version') . "/price_rules/{$priceRuleId}/discount_codes.json");
+                                ])->get("https://{$shop->shopify_domain}/admin/api/".config('services.shopify.api_version')."/price_rules/{$priceRuleId}/discount_codes.json");
 
                                 $codes = $codesResponse->json('discount_codes') ?? [];
 

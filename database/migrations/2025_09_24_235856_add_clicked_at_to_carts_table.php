@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::table('carts', function (Blueprint $table) {
+        Schema::table('carts', function (Blueprint $table) {
             $table->timestamp('clicked_at')->nullable()->after('recovery_token');
         });
     }

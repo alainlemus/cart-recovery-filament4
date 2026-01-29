@@ -6,32 +6,36 @@ use App\Filament\Resources\Subscriptions\SubscriptionResource;
 use App\Models\Subscription;
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Stripe\Stripe;
 use Stripe\Subscription as StripeSubscription;
-use Filament\Notifications\Notification;
-use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
 
 class ViewSubscriptionPage extends ViewRecord
 {
     protected static string $resource = SubscriptionResource::class;
 
     public string $name;
+
     public string $email;
+
     public string $product_name;
+
     public string $price;
+
     public string $next_payment_date;
+
     public string $card_last_four;
 
     protected function getHeaderActions(): array
     {
         return [
-            //EditAction::make(),
+            // EditAction::make(),
             Action::make('cancel')
                 ->label('Cancel Subscription')
                 ->color('danger')
@@ -47,7 +51,7 @@ class ViewSubscriptionPage extends ViewRecord
                         } catch (\Exception $e) {
                             Notification::make()
                                 ->title('Error to cancel in Stripe')
-                                 //->title('Error al cancelar en Stripe') --- IGNORE ---
+                                 // ->title('Error al cancelar en Stripe') --- IGNORE ---
                                 ->danger()
                                 ->send();
                         }

@@ -22,7 +22,7 @@ class ShopifyAuthController extends Controller
                 'context' => 'ShopifyAuthController::auth',
             ]);
 
-            return redirect()->route('filament.admin-shop.auth.login')->with('error', 'Debes estar autenticado.');
+            return redirect()->route('filament.admin-shop.auth.login')->with('error', __('messages.auth.must_be_authenticated'));
         }
 
         $shop = Shop::where('id', $shop_id)->where('user_id', $user->id)->first();
@@ -34,7 +34,7 @@ class ShopifyAuthController extends Controller
                 'context' => 'ShopifyAuthController::auth',
             ]);
 
-            return redirect()->route('filament.admin-shop.resources.shops.index')->with('error', 'Tienda no encontrada.');
+            return redirect()->route('filament.admin-shop.resources.shops.index')->with('error', __('messages.errors.shop_not_found'));
         }
 
         if (! empty($shop->access_token)) {
@@ -43,7 +43,7 @@ class ShopifyAuthController extends Controller
                 'context' => 'ShopifyAuthController::auth',
             ]);
 
-            return redirect()->route('filament.admin-shop.resources.shops.index')->with('success', 'La tienda ya está conectada.');
+            return redirect()->route('filament.admin-shop.resources.shops.index')->with('success', __('messages.errors.shop_already_connected'));
         }
 
         // Parámetros para la URL de autorización de Shopify
@@ -107,7 +107,7 @@ class ShopifyAuthController extends Controller
             ]);
 
             return redirect()->route('shopify.billing.plans')
-                ->with('error', 'Security error: Invalid state. Please try again.');
+                ->with('error', __('messages.auth.invalid_state'));
         }
 
         $shop = Shop::find($shop_id);
@@ -118,7 +118,7 @@ class ShopifyAuthController extends Controller
                 'context' => 'ShopifyAuthController::callback',
             ]);
 
-            return redirect()->route('filament.admin-shop.resources.shops.index')->with('error', 'Tienda no encontrada.');
+            return redirect()->route('filament.admin-shop.resources.shops.index')->with('error', __('messages.errors.shop_not_found'));
         }
 
         // Obtener el access_token
@@ -135,7 +135,7 @@ class ShopifyAuthController extends Controller
                 'context' => 'ShopifyAuthController::callback',
             ]);
 
-            return redirect()->route('filament.admin-shop.resources.shops.index')->with('error', 'Error al conectar con Shopify.');
+            return redirect()->route('filament.admin-shop.resources.shops.index')->with('error', __('messages.errors.shopify_connection_error'));
         }
 
         $data = $response->json();
@@ -148,7 +148,7 @@ class ShopifyAuthController extends Controller
                 'context' => 'ShopifyAuthController::callback',
             ]);
 
-            return redirect()->route('filament.admin-shop.resources.shops.index')->with('error', 'No se pudo obtener el token de acceso.');
+            return redirect()->route('filament.admin-shop.resources.shops.index')->with('error', __('messages.errors.no_access_token'));
         }
 
         // Guardar el access_token en la tienda
@@ -180,10 +180,10 @@ class ShopifyAuthController extends Controller
                 ]);
 
                 return redirect()->route('shopify.billing.subscribe', ['product' => $product->id])
-                    ->with('success', 'Store connected! Now completing your subscription...');
+                    ->with('success', __('messages.auth.store_connected_subscription'));
             }
         }
 
-        return redirect()->route('filament.admin-shop.resources.shops.index')->with('success', 'Tienda conectada con Shopify exitosamente.');
+        return redirect()->route('filament.admin-shop.resources.shops.index')->with('success', __('messages.auth.shop_connected_success'));
     }
 }

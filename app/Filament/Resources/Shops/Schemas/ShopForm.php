@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Shops\Schemas;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
-use Illuminate\Support\Facades\Auth;
 
 class ShopForm
 {

@@ -5,11 +5,11 @@ namespace App\services;
 use App\Models\Coupon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class ShopifyDiscountService
 {
     protected string $shop;
+
     protected string $token;
 
     public function __construct(string $shop, string $token)
@@ -18,21 +18,20 @@ class ShopifyDiscountService
         $this->token = $token;
     }
 
-
     public function createDiscountCode(string $prefix = 'CART', float $amount = 10.0): ?array
     {
         Log::info('Creating discount code', [
             'shop' => $this->shop,
             'prefix' => $prefix,
             'amount' => $amount,
-            'context' => 'ShopifyDiscountService::createDiscountCode'
+            'context' => 'ShopifyDiscountService::createDiscountCode',
         ]);
 
         $priceRuleResponse = Http::withHeaders([
             'X-Shopify-Access-Token' => $this->token,
-        ])->post("https://{$this->shop}/admin/api/".config('services.shopify.api_version')."/price_rules.json", [
+        ])->post("https://{$this->shop}/admin/api/".config('services.shopify.api_version').'/price_rules.json', [
             'price_rule' => [
-                'title' => "{$prefix}-" . strtoupper(uniqid()),
+                'title' => "{$prefix}-".strtoupper(uniqid()),
                 'target_type' => 'line_item',
                 'target_selection' => 'all',
                 'allocation_method' => 'across',
@@ -40,48 +39,48 @@ class ShopifyDiscountService
                 'value' => "-{$amount}",
                 'customer_selection' => 'all',
                 'starts_at' => now()->toIso8601String(),
-            ]
+            ],
         ]);
 
         Log::info('Price rule response', [
             'body' => $priceRuleResponse->body(),
             'status' => $priceRuleResponse->status(),
-            'context' => 'ShopifyDiscountService::createDiscountCode'
+            'context' => 'ShopifyDiscountService::createDiscountCode',
         ]);
 
-        if (!$priceRuleResponse->successful()) {
+        if (! $priceRuleResponse->successful()) {
             return null;
         }
 
         $priceRuleId = $priceRuleResponse->json('price_rule.id');
-        $code = strtoupper($prefix) . '-' . substr(uniqid(), -6);
+        $code = strtoupper($prefix).'-'.substr(uniqid(), -6);
 
         // Garantizar unicidad del código
         while (Coupon::where('code', $code)->exists()) {
-            $code = strtoupper($prefix) . '-' . substr(uniqid('', true), -6);
+            $code = strtoupper($prefix).'-'.substr(uniqid('', true), -6);
         }
 
         Log::info('Creating discount code', [
             'price_rule_id' => $priceRuleId,
             'code' => $code,
-            'context' => 'ShopifyDiscountService::createDiscountCode'
+            'context' => 'ShopifyDiscountService::createDiscountCode',
         ]);
 
         $discountResponse = Http::withHeaders([
             'X-Shopify-Access-Token' => $this->token,
         ])->post("https://{$this->shop}/admin/api/".config('services.shopify.api_version')."/price_rules/{$priceRuleId}/discount_codes.json", [
             'discount_code' => [
-                'code' => $code
-            ]
+                'code' => $code,
+            ],
         ]);
 
         Log::info('Discount code response', [
             'body' => $discountResponse->body(),
             'status' => $discountResponse->status(),
-            'context' => 'ShopifyDiscountService::createDiscountCode'
+            'context' => 'ShopifyDiscountService::createDiscountCode',
         ]);
 
-        if (!$discountResponse->successful()) {
+        if (! $discountResponse->successful()) {
             return null;
         }
 
@@ -107,15 +106,16 @@ class ShopifyDiscountService
         try {
             $response = Http::withHeaders([
                 'X-Shopify-Access-Token' => $this->token,
-            ])->delete("https://{$this->shop}/admin/api/" . config('services.shopify.api_version') . "/price_rules/{$priceRuleId}/discount_codes/{$discountCodeId}.json");
+            ])->delete("https://{$this->shop}/admin/api/".config('services.shopify.api_version')."/price_rules/{$priceRuleId}/discount_codes/{$discountCodeId}.json");
 
             if ($response->successful()) {
                 Log::info('Discount code deleted successfully', [
                     'discountCodeId' => $discountCodeId,
                     'priceRuleId' => $priceRuleId,
                     'status' => $response->status(),
-                    'context' => 'ShopifyDiscountService::deleteDiscountCode'
+                    'context' => 'ShopifyDiscountService::deleteDiscountCode',
                 ]);
+
                 return true;
             }
 
@@ -127,8 +127,9 @@ class ShopifyDiscountService
                 'priceRuleId' => $priceRuleId,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'context' => 'ShopifyDiscountService::deleteDiscountCode'
+                'context' => 'ShopifyDiscountService::deleteDiscountCode',
             ]);
+
             return false;
         }
     }
@@ -138,14 +139,15 @@ class ShopifyDiscountService
         try {
             $response = Http::withHeaders([
                 'X-Shopify-Access-Token' => $this->token,
-            ])->delete("https://{$this->shop}/admin/api/" . config('services.shopify.api_version') . "/price_rules/{$priceRuleId}.json");
+            ])->delete("https://{$this->shop}/admin/api/".config('services.shopify.api_version')."/price_rules/{$priceRuleId}.json");
 
             if ($response->successful()) {
                 Log::info('Price rule deleted successfully', [
                     'priceRuleId' => $priceRuleId,
                     'status' => $response->status(),
-                    'context' => 'ShopifyDiscountService::deletePriceRule'
+                    'context' => 'ShopifyDiscountService::deletePriceRule',
                 ]);
+
                 return true;
             }
 
@@ -153,8 +155,9 @@ class ShopifyDiscountService
                 'priceRuleId' => $priceRuleId,
                 'status' => $response->status(),
                 'body' => $response->body(),
-                'context' => 'ShopifyDiscountService::deletePriceRule'
+                'context' => 'ShopifyDiscountService::deletePriceRule',
             ]);
+
             return false;
 
         } catch (\Throwable $e) {
@@ -162,10 +165,10 @@ class ShopifyDiscountService
                 'priceRuleId' => $priceRuleId,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'context' => 'ShopifyDiscountService::deletePriceRule'
+                'context' => 'ShopifyDiscountService::deletePriceRule',
             ]);
+
             return false;
         }
     }
-
 }

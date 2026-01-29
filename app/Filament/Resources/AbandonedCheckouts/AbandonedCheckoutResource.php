@@ -11,9 +11,9 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AbandonedCheckoutResource extends Resource
 {
@@ -40,11 +40,12 @@ class AbandonedCheckoutResource extends Resource
 
         Log::info('Obteniendo checkouts abandonados para el usuario', [
             'user_id' => $user ? $user->id : null,
-            'context' => 'AbandonedCheckoutResource::fetchAbandonedCheckouts'
+            'context' => 'AbandonedCheckoutResource::fetchAbandonedCheckouts',
         ]);
 
-        if (!$shop) {
+        if (! $shop) {
             Log::warning('No se encontró tienda para el usuario', ['user_id' => $user->id]);
+
             return collect();
         }
 
@@ -61,6 +62,7 @@ class AbandonedCheckoutResource extends Resource
 
         if ($response->failed()) {
             Log::error('Error al obtener checkouts', ['error' => $response->json()]);
+
             return collect();
         }
 

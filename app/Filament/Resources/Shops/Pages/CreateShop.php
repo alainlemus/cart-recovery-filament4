@@ -17,14 +17,14 @@ class CreateShop extends CreateRecord
     {
         Log::info('Datos recibidos en CreateShop antes de mutar:', [
             'data' => $data,
-            'context' => 'CreateShop::mutateFormDataBeforeCreate'
+            'context' => 'CreateShop::mutateFormDataBeforeCreate',
         ]);
 
         $data = parent::mutateFormDataBeforeCreate($data);
 
         Log::info('Datos después de mutar en CreateShop:', [
             'data' => $data,
-            'context' => 'CreateShop::mutateFormDataBeforeCreate'
+            'context' => 'CreateShop::mutateFormDataBeforeCreate',
         ]);
 
         return $data;
@@ -34,10 +34,10 @@ class CreateShop extends CreateRecord
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             Log::error('No hay usuario autenticado en handleRecordCreation', [
                 'data' => $data,
-                'context' => 'CreateShop::handleRecordCreation'
+                'context' => 'CreateShop::handleRecordCreation',
             ]);
             throw new \Exception('No hay usuario autenticado.');
         }
@@ -46,7 +46,7 @@ class CreateShop extends CreateRecord
         if (Shop::where('shopify_domain', $data['shopify_domain'])->exists()) {
             Notification::make()
                 ->title('The store is already registered')
-                ->body('The domain ' . $data['shopify_domain'] . ' already exists in the system.')
+                ->body('The domain '.$data['shopify_domain'].' already exists in the system.')
                 ->danger()
                 ->persistent()
                 ->send();
@@ -62,10 +62,9 @@ class CreateShop extends CreateRecord
 
         Log::info('Datos finales para crear el registro:', [
             'data' => $data,
-            'context' => 'CreateShop::handleRecordCreation'
+            'context' => 'CreateShop::handleRecordCreation',
         ]);
 
         return parent::handleRecordCreation($data);
     }
-
 }

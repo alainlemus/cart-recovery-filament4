@@ -25,7 +25,7 @@ class Cart extends Model
         'status',               // 'abandoned' o 'complete'
         'clicked_at',
         'recovered_at',
-        'recovered_via'
+        'recovered_via',
 
     ];
 
@@ -43,5 +43,4 @@ class Cart extends Model
     {
         return $this->belongsTo(Shop::class);
     }
-
 }

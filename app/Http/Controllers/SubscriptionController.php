@@ -101,7 +101,7 @@ class SubscriptionController extends Controller
 
             // Redirigir al usuario con mensaje de error
             return redirect()->route('subscription.create', ['plan' => $plan->id])
-                ->with('error', 'Hubo un problema al procesar tu suscripción. Por favor, inténtalo de nuevo.');
+                ->with('error', __('messages.subscription.stripe_error'));
         }
     }
 
@@ -141,6 +141,6 @@ class SubscriptionController extends Controller
 
         // Redirigir al panel de Filament
         return redirect()->route('filament.admin-shop.pages.dashboard')
-            ->with('success', '¡Suscripción activada! Bienvenido a tu panel.');
+            ->with('success', __('messages.subscription.stripe_activated'));
     }
 }

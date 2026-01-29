@@ -6,9 +6,8 @@ use App\Filament\Resources\AbandonedCheckouts\AbandonedCheckoutResource;
 use App\Models\Cart;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Actions\CreateAction;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ListAbandonedCheckouts extends ListRecords
@@ -31,14 +30,14 @@ class ListAbandonedCheckouts extends ListRecords
                             'user_id' => $user->id,
                             'shop_id' => $shop->id,
                             'checkouts' => $checkouts,
-                            'context' => 'ListAbandonedCheckouts::sincronizarCheckouts'
+                            'context' => 'ListAbandonedCheckouts::sincronizarCheckouts',
                         ]);
                         foreach ($checkouts as $checkout) {
                             $existingCart = Cart::where('shopify_id', $checkout['id'])->first();
                             Log::info('Procesando checkout', [
                                 'checkout_id' => $checkout['id'],
                                 'existing_cart_id' => $existingCart ? $existingCart->id : null,
-                                'context' => 'ListAbandonedCheckouts::sincronizarCheckouts'
+                                'context' => 'ListAbandonedCheckouts::sincronizarCheckouts',
                             ]);
                             $recoveryToken = $existingCart && $existingCart->recovery_token
                                 ? $existingCart->recovery_token
@@ -47,10 +46,10 @@ class ListAbandonedCheckouts extends ListRecords
                             Log::info('Asignando recovery token', [
                                 'checkout_id' => $checkout['id'],
                                 'recovery_token' => $recoveryToken,
-                                'context' => 'ListAbandonedCheckouts::sincronizarCheckouts'
+                                'context' => 'ListAbandonedCheckouts::sincronizarCheckouts',
                             ]);
 
-                            //dd($checkout['response']['phone']);
+                            // dd($checkout['response']['phone']);
 
                             Cart::updateOrCreate(
                                 ['shopify_id' => $checkout['id']],
@@ -59,7 +58,7 @@ class ListAbandonedCheckouts extends ListRecords
                                     'user_id' => $user->id,
                                     'shop_id' => $shop->id,
                                     'email_client' => $checkout['email'],
-                                    'phone_client' => $checkout['response']['phone'] != null ? $checkout['phone'] :'+5215531293712',
+                                    'phone_client' => $checkout['response']['phone'] != null ? $checkout['phone'] : '+5215531293712',
                                     'response' => json_encode($checkout),
                                     'total_price' => $checkout['total_price'],
                                     'created_at' => $checkout['created_at'],
@@ -75,5 +74,4 @@ class ListAbandonedCheckouts extends ListRecords
                 }),
         ];
     }
-
 }

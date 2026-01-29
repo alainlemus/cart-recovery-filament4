@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Cart;
 use App\Models\Shop;
 use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -20,6 +19,7 @@ class CartSeeder36Months extends Seeder
 
         if ($shops->isEmpty()) {
             $this->command->warn('No shops found. Please seed shops first.');
+
             return;
         }
 

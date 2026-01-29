@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
@@ -17,7 +17,7 @@ class Product extends Model
         'price',
         'currency',
         'is_active',
-        'features'
+        'features',
     ];
 
     protected $casts = [
@@ -35,5 +35,4 @@ class Product extends Model
     {
         return $this->hasMany(Shop::class);
     }
-
 }

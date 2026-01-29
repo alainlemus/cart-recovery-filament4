@@ -45,26 +45,26 @@ class ShopifyBillingController extends Controller
 
         if (! $user) {
             return redirect()->route('shopify.register', ['product' => $product->id])
-                ->with('info', 'Please create an account to subscribe.');
+                ->with('info', __('messages.auth.create_account_subscribe'));
         }
 
         $shop = $user->shops()->first();
 
         if (! $shop) {
             return redirect()->route('shopify.billing.plans')
-                ->with('error', 'You need to create a shop first.');
+                ->with('error', __('messages.errors.create_shop_first'));
         }
 
         if (! $shop->access_token) {
             return redirect()->route('shopify.auth', ['shop_id' => $shop->id])
-                ->with('error', 'Please connect your Shopify store first.');
+                ->with('error', __('messages.errors.connect_store_first'));
         }
 
         // Check if shop already has an active subscription
         $existingSubscription = $shop->shopifySubscription;
         if ($existingSubscription && $existingSubscription->isActive()) {
             return redirect()->route('shopify.billing.plans')
-                ->with('error', 'You already have an active subscription. Please cancel it first to change plans.');
+                ->with('error', __('messages.subscription.already_active'));
         }
 
         // Create the return URL for after Shopify billing confirmation
@@ -89,7 +89,7 @@ class ShopifyBillingController extends Controller
             ]);
 
             return redirect()->route('shopify.billing.plans')
-                ->with('error', 'Failed to create subscription. Please try again.');
+                ->with('error', __('messages.subscription.error'));
         }
 
         // Get the confirmation URL from the Shopify response
@@ -131,7 +131,7 @@ class ShopifyBillingController extends Controller
         if (! $chargeId) {
             // User declined the charge
             return redirect()->route('shopify.billing.plans')
-                ->with('error', 'Subscription was declined or cancelled.');
+                ->with('error', __('messages.subscription.declined'));
         }
 
         // Get the subscription from our database
@@ -162,7 +162,7 @@ class ShopifyBillingController extends Controller
 
         if (! $subscription) {
             return redirect()->route('shopify.billing.plans')
-                ->with('error', 'Failed to process subscription. Please try again.');
+                ->with('error', __('messages.subscription.process_error'));
         }
 
         // Check if the charge was accepted
@@ -171,7 +171,7 @@ class ShopifyBillingController extends Controller
 
         if (! $charge) {
             return redirect()->route('shopify.billing.plans')
-                ->with('error', 'Failed to verify subscription status.');
+                ->with('error', __('messages.subscription.verification_error'));
         }
 
         // If the charge is accepted, activate it
@@ -195,7 +195,7 @@ class ShopifyBillingController extends Controller
                 ]);
 
                 return redirect()->route('filament.admin-shop.pages.dashboard')
-                    ->with('success', 'Subscription activated successfully! Welcome to '.$product->name.'.');
+                    ->with('success', __('messages.subscription.activated', ['product' => $product->name]));
             }
         } elseif ($charge['status'] === 'active') {
             // Already active
@@ -209,7 +209,7 @@ class ShopifyBillingController extends Controller
             ]);
 
             return redirect()->route('filament.admin-shop.pages.dashboard')
-                ->with('success', 'Subscription is already active! Welcome to '.$product->name.'.');
+                ->with('success', __('messages.subscription.already_active_status', ['product' => $product->name]));
         } else {
             // Charge was declined or has another status
             $subscription->update([
@@ -217,7 +217,7 @@ class ShopifyBillingController extends Controller
             ]);
 
             return redirect()->route('shopify.billing.plans')
-                ->with('error', 'Subscription was not approved. Status: '.$charge['status']);
+                ->with('error', __('messages.subscription.not_approved', ['status' => $charge['status']]));
         }
 
         return redirect()->route('shopify.billing.plans')

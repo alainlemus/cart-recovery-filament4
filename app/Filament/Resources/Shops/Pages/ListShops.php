@@ -4,9 +4,7 @@ namespace App\Filament\Resources\Shops\Pages;
 
 use App\Filament\Resources\Shops\ShopResource;
 use App\Models\Product;
-use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -20,23 +18,23 @@ class ListShops extends ListRecords
         return [
             CreateAction::make()
                 ->disabled(function () {
-                    return !$this->canCreate();
+                    return ! $this->canCreate();
                 })
                 ->tooltip(function () {
                     $user = Auth::user();
-                    if (!$user) {
+                    if (! $user) {
                         return 'No estás autenticado.';
                     }
 
                     $subscription = $user->subscriptions()->where('stripe_status', 'active')->latest()->first();
-                    if (!$subscription) {
+                    if (! $subscription) {
                         return 'You need an active subscription to create a store.';
                     }
 
                     $shopCount = $user->shops()->count();
                     $product = Product::where('id', $subscription->product_id)->first();
 
-                    if (!$product) {
+                    if (! $product) {
                         return 'Product not found for your subscription.';
                     }
 
@@ -57,21 +55,23 @@ class ListShops extends ListRecords
     {
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             Log::error('No hay usuario autenticado al verificar canCreate', [
-                'context' => 'ListShops::canCreate'
+                'context' => 'ListShops::canCreate',
             ]);
+
             return false;
         }
 
         // Obtener la suscripción activa
         $subscription = $user->subscriptions()->where('stripe_status', 'active')->latest()->first();
 
-        if (!$subscription) {
+        if (! $subscription) {
             Log::info('Usuario sin suscripción activa', [
                 'user_id' => $user->id,
-                'context' => 'ListShops::canCreate'
+                'context' => 'ListShops::canCreate',
             ]);
+
             return false;
         }
 
@@ -80,21 +80,22 @@ class ListShops extends ListRecords
         Log::info('Conteo de tiendas del usuario', [
             'user_id' => $user->id,
             'shop_count' => $shopCount,
-            'context' => 'ListShops::canCreate'
+            'context' => 'ListShops::canCreate',
         ]);
 
         // Obtener el producto asociado al product_id de la suscripción
         $product = Product::where('id', $subscription->product_id)->first();
 
-        if (!$product) {
+        if (! $product) {
             Log::error('No se encontró producto para el product_id de la suscripción', [
                 'product_id' => $subscription->product_id,
-                'context' => 'ListShops::canCreate'
+                'context' => 'ListShops::canCreate',
             ]);
+
             return false;
         }
 
-        if($shopCount > 0){
+        if ($shopCount > 0) {
 
             // Aplicar las reglas de validación según el producto
             switch ($product->name) {
@@ -103,8 +104,9 @@ class ListShops extends ListRecords
                         Log::info('Límite de tiendas alcanzado para Basic', [
                             'user_id' => $user->id,
                             'shop_count' => $shopCount,
-                            'context' => 'ListShops::canCreate'
+                            'context' => 'ListShops::canCreate',
                         ]);
+
                         return false;
                     }
                     break;
@@ -114,8 +116,9 @@ class ListShops extends ListRecords
                         Log::info('Límite de tiendas alcanzado para Standard', [
                             'user_id' => $user->id,
                             'shop_count' => $shopCount,
-                            'context' => 'ListShops::canCreate'
+                            'context' => 'ListShops::canCreate',
                         ]);
+
                         return false;
                     }
                     break;
@@ -127,8 +130,9 @@ class ListShops extends ListRecords
                 default:
                     Log::error('Producto desconocido', [
                         'product_name' => $product->name,
-                        'context' => 'ListShops::canCreate'
+                        'context' => 'ListShops::canCreate',
                     ]);
+
                     return false;
             }
 
@@ -136,12 +140,11 @@ class ListShops extends ListRecords
                 'user_id' => $user->id,
                 'product_name' => $product->name,
                 'shop_count' => $shopCount,
-                'context' => 'ListShops::canCreate'
+                'context' => 'ListShops::canCreate',
             ]);
 
         }
 
         return true;
     }
-
 }

@@ -23,7 +23,27 @@ return [
     'password_confirmation' => 'Confirmar Contraseña',
     'remember_me' => 'Recordarme',
     'forgot_password' => '¿Olvidaste tu contraseña?',
-    
+
+    // Authentication
+    'auth' => [
+        'register_success' => '¡Cuenta creada! Ahora conecta tu tienda Shopify.',
+        'must_be_authenticated' => 'Debes estar autenticado.',
+        'invalid_state' => 'Error de seguridad: Estado inválido. Por favor, intenta de nuevo.',
+        'create_account_subscribe' => 'Por favor, crea una cuenta para suscribirte.',
+        'store_connected_subscription' => '¡Tienda conectada! Ahora completando tu suscripción...',
+        'shop_connected_success' => 'Tienda conectada con Shopify exitosamente.',
+    ],
+
+    // Errors
+    'errors' => [
+        'shop_not_found' => 'Tienda no encontrada.',
+        'shop_already_connected' => 'La tienda ya está conectada.',
+        'shopify_connection_error' => 'Error al conectar con Shopify.',
+        'no_access_token' => 'No se pudo obtener el token de acceso.',
+        'create_shop_first' => 'Necesitas crear una tienda primero.',
+        'connect_store_first' => 'Por favor, conecta tu tienda Shopify primero.',
+    ],
+
     // Shopify
     'shopify' => [
         'plans' => [
@@ -48,54 +68,53 @@ return [
             'status' => 'Estado',
             'active' => 'Activo',
             'trial_ends' => 'Prueba termina',
-            'price' => 'Precio',
-            'next_billing' => 'Próxima facturación',
-            'sync_status' => 'Sincronizar Estado',
-            'cancel_subscription' => 'Cancelar Suscripción',
-            'confirm_cancel' => '¿Estás seguro de que quieres cancelar tu suscripción?',
+            'manage_subscription' => 'Gestionar Suscripción',
+            'on_trial' => 'En Periodo de Prueba',
+            'not_subscribed' => 'No estás suscrito a ningún plan',
+            'current_subscription' => 'Tu Suscripción Actual',
         ],
         'register' => [
-            'title' => 'Crea Tu Cuenta',
-            'subtitle' => 'Suscríbete a',
+            'title' => 'Crear Tu Cuenta',
+            'subtitle' => 'Suscribirse a',
             'full_name' => 'Nombre Completo',
-            'email_address' => 'Dirección de Correo',
-            'shopify_domain' => 'Dominio de Tienda Shopify',
-            'shopify_domain_placeholder' => 'tutienda.myshopify.com',
-            'shopify_domain_help' => 'Ingresa la URL de tu tienda Shopify (ej: tutienda.myshopify.com)',
+            'email_address' => 'Correo Electrónico',
+            'shopify_domain' => 'Dominio de Shopify',
+            'shopify_domain_placeholder' => 'tu-tienda.myshopify.com',
+            'shopify_domain_help' => 'Ingresa tu dominio completo de Shopify (ej: tu-tienda.myshopify.com)',
             'password' => 'Contraseña',
             'confirm_password' => 'Confirmar Contraseña',
-            'create_account' => 'Crear Cuenta y Conectar Tienda',
+            'create_account' => 'Crear Cuenta y Continuar',
             'already_account' => '¿Ya tienes una cuenta?',
-            'back_to_plans' => 'Volver a planes',
-            'what_happens_next' => '¿Qué sigue?',
+            'back_to_plans' => 'Volver a Planes',
+            'what_happens_next' => '¿Qué sucede después?',
             'steps' => [
-                'create_account' => 'Crea tu cuenta',
-                'connect_store' => 'Conecta tu tienda Shopify (OAuth)',
-                'approve_charge' => 'Aprueba el cargo de suscripción',
-                'start_recovering' => '¡Comienza a recuperar carritos abandonados!',
+                'create_account' => 'Creamos tu cuenta',
+                'connect_store' => 'Te conectamos con tu tienda Shopify',
+                'approve_charge' => 'Apruebas el cargo en Shopify',
+                'start_recovering' => '¡Comienzas a recuperar carritos abandonados!',
             ],
         ],
     ],
 
-    // Subscription messages
+    // Subscriptions
     'subscription' => [
-        'activated' => '¡Suscripción activada! Bienvenido a tu panel.',
-        'cancelled' => 'Suscripción cancelada exitosamente.',
-        'updated' => 'Suscripción actualizada exitosamente.',
-        'error' => 'Hubo un problema al procesar tu suscripción. Por favor, inténtalo de nuevo.',
-        'already_active' => 'Ya tienes una suscripción activa.',
-        'no_active' => 'No tienes una suscripción activa.',
-        'select_plan' => 'Por favor, selecciona un plan para continuar.',
+        'error' => 'Error al crear la suscripción. Por favor, inténtalo de nuevo.',
+        'already_active' => 'Ya tienes una suscripción activa. Por favor, cancélala primero para cambiar de plan.',
+        'declined' => 'La suscripción fue rechazada o cancelada.',
+        'process_error' => 'Error al procesar la suscripción. Por favor, inténtalo de nuevo.',
+        'verification_error' => 'Error al verificar el estado de la suscripción.',
+        'activated' => '¡Suscripción activada exitosamente! Bienvenido a :product.',
+        'already_active_status' => '¡La suscripción ya está activa! Bienvenido a :product.',
+        'not_approved' => 'La suscripción no fue aprobada. Estado: :status',
+        'pending_activation' => 'La suscripción está pendiente de activación. Por favor, actualiza la página.',
+        'stripe_error' => 'Hubo un problema al procesar tu suscripción. Por favor, inténtalo de nuevo.',
+        'stripe_activated' => '¡Suscripción activada! Bienvenido a tu panel.',
     ],
 
-    // Auth messages
-    'auth' => [
-        'failed' => 'Estas credenciales no coinciden con nuestros registros.',
-        'password' => 'La contraseña proporcionada es incorrecta.',
-        'throttle' => 'Demasiados intentos de inicio de sesión. Por favor intenta de nuevo en :seconds segundos.',
-        'logout_success' => 'Sesión cerrada exitosamente.',
-        'login_success' => '¡Bienvenido de nuevo!',
-        'register_success' => '¡Cuenta creada exitosamente!',
-        'must_be_authenticated' => 'Debes estar autenticado.',
+    // Language Selector
+    'language' => [
+        'select' => 'Seleccionar Idioma',
+        'spanish' => 'Español',
+        'english' => 'English',
     ],
 ];

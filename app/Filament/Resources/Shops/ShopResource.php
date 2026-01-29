@@ -33,15 +33,15 @@ class ShopResource extends Resource
     {
         Log::info('Iniciando mutateFormDataBeforeCreate en ShopResource', [
             'data' => $data,
-            'context' => 'ShopResource::mutateFormDataBeforeCreate'
+            'context' => 'ShopResource::mutateFormDataBeforeCreate',
         ]);
 
         $user = Auth::user();
 
-        if (!$user) {
+        if (! $user) {
             Log::error('No hay usuario autenticado al intentar crear una tienda', [
                 'data' => $data,
-                'context' => 'ShopResource::mutateFormDataBeforeCreate'
+                'context' => 'ShopResource::mutateFormDataBeforeCreate',
             ]);
             throw new \Exception('No hay usuario autenticado. Por favor, inicia sesión.');
         }
@@ -55,7 +55,7 @@ class ShopResource extends Resource
         Log::info('Datos preparados para crear la tienda:', [
             'data' => $data,
             'user_id' => $user->id,
-            'context' => 'ShopResource::mutateFormDataBeforeCreate'
+            'context' => 'ShopResource::mutateFormDataBeforeCreate',
         ]);
 
         return $data;

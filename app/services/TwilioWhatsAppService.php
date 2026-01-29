@@ -1,34 +1,35 @@
 <?php
 
-    namespace App\services;
+namespace App\services;
 
-    use Twilio\Rest\Client;
-    use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log;
+use Twilio\Rest\Client;
 
-    class TwilioWhatsAppService
+class TwilioWhatsAppService
+{
+    public static function sendMessage(string $to, string $message): bool
     {
-        public static function sendMessage(string $to, string $message): bool
-        {
-            try {
-                $client = new Client(
-                    config('services.twilio.sid'),
-                    config('services.twilio.token')
-                );
+        try {
+            $client = new Client(
+                config('services.twilio.sid'),
+                config('services.twilio.token')
+            );
 
-                $client->messages->create(
-                    "whatsapp:{$to}",
-                    [
-                        'from' => config('services.twilio.whatsapp_number'),
-                        'body' => $message,
-                    ]
-                );
+            $client->messages->create(
+                "whatsapp:{$to}",
+                [
+                    'from' => config('services.twilio.whatsapp_number'),
+                    'body' => $message,
+                ]
+            );
 
-                return true;
-            } catch (\Exception $e) {
-                Log::error('Error enviando WhatsApp con Twilio', [
-                    'error' => $e->getMessage(),
-                ]);
-                return false;
-            }
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Error enviando WhatsApp con Twilio', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return false;
         }
     }
+}
