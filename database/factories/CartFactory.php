@@ -17,7 +17,7 @@ class CartFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_cart' => (String) $this->faker->uuid(),
+            'id_cart' => (string) $this->faker->uuid(),
             'user_id' => \App\Models\User::factory(),
             'shop_id' => \App\Models\Shop::factory(),
             'total_price' => 49.97,
@@ -25,7 +25,7 @@ class CartFactory extends Factory
                 ['algo' => 1],
                 ['algo2' => 1],
             ]),
-            'status' => $this->faker->randomElement(['active', 'abandoned', 'completed']),
+            'status' => $this->faker->randomElement(['abandoned', 'complete']),
             'abandoned_at' => $this->faker->optional()->dateTimeBetween('-1 month', 'now'),
             'email_client' => $this->faker->randomElement(['Mailgun', 'SendGrid', 'Amazon SES']),
             'phone_client' => $this->faker->randomElement(['Twilio', 'Nexmo', 'Plivo']),
