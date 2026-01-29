@@ -59,6 +59,10 @@ class AdminShopPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->renderHook(
+                'panels::global-search.after',
+                fn () => view('filament.components.language-switcher-topbar')
+            )
             ->authMiddleware([
                 Authenticate::class,
             ]);

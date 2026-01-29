@@ -7,6 +7,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+    {{-- Language Selector - Top Right --}}
+    <div class="absolute top-4 right-4">
+        <x-language-selector />
+    </div>
+
     <div class="container mx-auto px-4 py-12">
         {{-- Header --}}
         <div class="text-center mb-12">

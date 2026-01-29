@@ -7,6 +7,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center">
+    {{-- Language Selector - Top Right --}}
+    <div class="absolute top-4 right-4">
+        <x-language-selector />
+    </div>
+
     <div class="w-full max-w-md px-4">
         {{-- Card --}}
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
