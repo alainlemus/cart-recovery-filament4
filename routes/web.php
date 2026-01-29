@@ -41,6 +41,11 @@ Route::post('/shopify/billing/subscribe/{product}', [ShopifyBillingController::c
 
 // These routes require authentication
 Route::middleware(['auth'])->prefix('shopify/billing')->name('shopify.billing.')->group(function () {
+=======
+// These routes require authentication
+Route::middleware(['auth'])->prefix('shopify/billing')->name('shopify.billing.')->group(function () {
+    Route::post('/subscribe/{product}', [ShopifyBillingController::class, 'subscribe'])->name('subscribe');
+>>>>>>> a20550ce25f31cec70a7dd872a3797076d171620
     Route::get('/callback', [ShopifyBillingController::class, 'callback'])->name('callback');
     Route::post('/cancel', [ShopifyBillingController::class, 'cancel'])->name('cancel');
     Route::post('/sync', [ShopifyBillingController::class, 'sync'])->name('sync');
